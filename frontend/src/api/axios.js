@@ -70,7 +70,7 @@ api.interceptors.response.use(
       try {
         // Important : utiliser axios brut, pas l'instance "api"
         // (sinon on entre dans une boucle infinie d'intercepteurs)
-        const res = await axios.post(`${API_URL}/api/auth/token/refresh/`, {
+        const res = await axios.post(`${API_URL}/auth/token/refresh/`, {
           refresh,
         });
 
