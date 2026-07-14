@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import TableauBordSection from '../../components/TableauBordSection';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -85,6 +86,9 @@ export default function Passation() {
   return (
     <Layout title="Service Passation" subtitle="Validation physique et montage des dossiers">
       <div className="flex flex-col gap-4">
+        {/* Tableau de bord */}
+        <TableauBordSection statuts={['passation']} titre="Passation" />
+
         <div className="flex justify-end">
           <button onClick={() => setShowModal(true)}
             className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">

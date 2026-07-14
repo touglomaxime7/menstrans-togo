@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import DossierViewSet
+from .views import ConteneurViewSet
 
 router = DefaultRouter()
-router.register(r'', DossierViewSet, basename='dossiers')
+router.register(r'', ConteneurViewSet, basename='conteneurs')
 
 urlpatterns = [
     path('', include(router.urls)),

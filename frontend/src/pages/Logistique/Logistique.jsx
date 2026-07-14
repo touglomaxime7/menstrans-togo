@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import TableauBordSection from '../../components/TableauBordSection';
+import ComboBox from '../../components/ComboBox';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -17,6 +19,27 @@ const BADGE_PHASE = {
   cloture:            { label: 'Clôturé',        cls: 'bg-gray-200 text-gray-700' },
 };
 
+const TERMINAUX = ['Port 1 — T.TL', 'Port 2 — LCT', 'Terminal PIA', 'Terminal BMH', 'Autre'];
+const TERMINAUX_MAP = {
+  'Port 1 — T.TL': 'T.TL', 'Port 2 — LCT': 'LCT',
+  'Terminal PIA': 'terminal_pia', 'Terminal BMH': 'terminal_bmh', 'Autre': 'autre',
+};
+
+const TYPES_BON = ['BAD', 'BAD Manutention', 'Appointement LCT'];
+const TYPES_BON_MAP = {
+  'BAD': 'BAD', 'BAD Manutention': 'BAD_manutention', 'Appointement LCT': 'appointement_LCT',
+};
+
+const ZONES_OPTIONS  = ['Lomé', 'Hors Lomé (Togo)', 'Hors Togo'];
+const ZONES_MAP = {
+  'Lomé': 'lome', 'Hors Lomé (Togo)': 'hors_lome', 'Hors Togo': 'hors_togo',
+};
+
+const LOCALITES = ['Aného', 'Bassar', 'Kara', 'Dapaong', 'Atakpamé', 'Sokodé', 'Autre'];
+
+const PAYS_LIVRAISON = ['Ghana', 'Bénin', 'Burkina Faso', 'Niger', 'Mali', 'Nigeria',
+  'Côte d\'Ivoire', 'Sénégal', 'Cameroun', 'Autre'];
+
 export default function Logistique() {
   const [missions,   setMissions]   = useState([]);
   const [livraisons, setLivraisons] = useState([]);
@@ -24,16 +47,25 @@ export default function Logistique() {
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [activeTab,  setActiveTab]  = useState('missions');
-  const [showModal,  setShowModal]  = useState(false);
+  const [showModal,    setShowModal]    = useState(false);
   const [showLivModal, setShowLivModal] = useState(false);
+
   const [form, setForm] = useState({
-    dossier: '', terminal: '', montant_dfu: 0,
-    type_bon: '', camion: '',
+    dossier: '', dossier_label: '',
+    terminal: '', terminal_label: '',
+    montant_dfu: 0,
+    type_bon: '', type_bon_label: '',
+    camion: '', camion_label: '',
     date_debut: new Date().toISOString().split('T')[0],
   });
+
   const [livForm, setLivForm] = useState({
-    logistique: '', zone_livraison: 'lome',
-    magasin_destination: '', localite: '', ville: '', pays: '',
+    logistique: '', logistique_label: '',
+    zone_livraison: 'lome', zone_label: 'Lomé',
+    magasin_destination: '',
+    localite: '', localite_label: '',
+    ville: '',
+    pays: '', pays_label: '',
     date_debut: new Date().toISOString().split('T')[0],
   });
 
@@ -41,7 +73,6 @@ export default function Logistique() {
     setLoading(true);
     try {
       const today = new Date().toISOString().split('T')[0];
-      // On récupère les dossiers des deux phases logistiques pour la création de missions
       const [misRes, livRes, camRes, dosInitRes, dosFinRes] = await Promise.all([
         api.get('/logistique/missions/',   { params: { date_debut: '2020-01-01', date_fin: today } }),
         api.get('/logistique/livraisons/', { params: { date_debut: '2020-01-01', date_fin: today } }),
@@ -64,14 +95,26 @@ export default function Logistique() {
 
   useEffect(() => { fetchData(); }, []);
 
+  // Options pour les ComboBox
+  const dossierOptions = dossiers.map(d => `${d.numero_dossier} — ${d.client_nom}`);
+  const camionOptions  = camions.map(c => `${c.immatriculation} — ${c.nom_chauffeur}`);
+  const missionOptions = missions.map(m => `${m.dossier_numero}`);
+
+  const trouverDossier = (val) =>
+    dossiers.find(d => `${d.numero_dossier} — ${d.client_nom}`.toLowerCase().includes(val.toLowerCase()));
+  const trouverCamion = (val) =>
+    camions.find(c => `${c.immatriculation} — ${c.nom_chauffeur}`.toLowerCase().includes(val.toLowerCase()));
+  const trouverMission = (val) =>
+    missions.find(m => m.dossier_numero.toLowerCase().includes(val.toLowerCase()));
+
   const validerMission = () => {
     const erreurs = [];
-    if (!form.dossier)              erreurs.push('Le dossier');
-    if (!form.terminal)             erreurs.push('Le terminal');
-    if (form.montant_dfu === '' || form.montant_dfu === null) erreurs.push('Le montant DFU');
-    if (!form.type_bon)             erreurs.push('Le type de bon');
-    if (!form.camion)               erreurs.push('Le camion');
-    if (!form.date_debut)           erreurs.push('La date de début');
+    if (!form.dossier)    erreurs.push('Le dossier');
+    if (!form.terminal)   erreurs.push('Le terminal');
+    if (!form.montant_dfu && form.montant_dfu !== 0) erreurs.push('Le montant DFU');
+    if (!form.type_bon)   erreurs.push('Le type de bon');
+    if (!form.camion)     erreurs.push('Le camion');
+    if (!form.date_debut) erreurs.push('La date de début');
     if (erreurs.length > 0) {
       toast.error('Champs obligatoires manquants : ' + erreurs.join(', '));
       return false;
@@ -84,29 +127,33 @@ export default function Logistique() {
     if (!validerMission()) return;
     try {
       await api.post('/logistique/missions/', {
-        ...form,
-        camion: form.camion || null,
+        dossier:     form.dossier,
+        terminal:    TERMINAUX_MAP[form.terminal_label] || form.terminal_label,
         montant_dfu: parseFloat(form.montant_dfu),
+        type_bon:    TYPES_BON_MAP[form.type_bon_label] || form.type_bon_label,
+        camion:      form.camion || null,
+        date_debut:  form.date_debut,
       });
       toast.success('Mission logistique créée !');
       setShowModal(false);
+      setForm({
+        dossier: '', dossier_label: '', terminal: '', terminal_label: '',
+        montant_dfu: 0, type_bon: '', type_bon_label: '',
+        camion: '', camion_label: '', date_debut: new Date().toISOString().split('T')[0],
+      });
       fetchData();
     } catch { toast.error('Erreur lors de la création'); }
   };
 
   const validerLivraison = () => {
     const erreurs = [];
-    if (!livForm.logistique)         erreurs.push('La mission');
-    if (!livForm.zone_livraison)     erreurs.push('La zone');
-    if (!livForm.date_debut)         erreurs.push('La date de départ');
-    if (livForm.zone_livraison === 'lome' && !livForm.magasin_destination.trim())
-      erreurs.push('Le magasin');
-    if (livForm.zone_livraison === 'hors_lome' && !livForm.localite)
-      erreurs.push('La localité');
-    if (livForm.zone_livraison === 'hors_togo') {
-      if (!livForm.pays)         erreurs.push('Le pays');
-      if (!livForm.ville.trim()) erreurs.push('La ville');
-    }
+    if (!livForm.logistique)     erreurs.push('La mission');
+    if (!livForm.zone_livraison) erreurs.push('La zone');
+    if (!livForm.date_debut)     erreurs.push('La date de départ');
+    if (livForm.zone_livraison === 'lome'      && !livForm.magasin_destination.trim()) erreurs.push('Le magasin');
+    if (livForm.zone_livraison === 'hors_lome' && !livForm.localite)                   erreurs.push('La localité');
+    if (livForm.zone_livraison === 'hors_togo' && !livForm.pays)                       erreurs.push('Le pays');
+    if (livForm.zone_livraison === 'hors_togo' && !livForm.ville.trim())               erreurs.push('La ville');
     if (erreurs.length > 0) {
       toast.error('Champs obligatoires manquants : ' + erreurs.join(', '));
       return false;
@@ -118,9 +165,22 @@ export default function Logistique() {
     e.preventDefault();
     if (!validerLivraison()) return;
     try {
-      await api.post('/logistique/livraisons/', livForm);
+      await api.post('/logistique/livraisons/', {
+        logistique:          livForm.logistique,
+        zone_livraison:      livForm.zone_livraison,
+        magasin_destination: livForm.magasin_destination,
+        localite:            livForm.localite,
+        ville:               livForm.ville,
+        pays:                livForm.pays,
+        date_debut:          livForm.date_debut,
+      });
       toast.success('Livraison enregistrée !');
       setShowLivModal(false);
+      setLivForm({
+        logistique: '', logistique_label: '', zone_livraison: 'lome', zone_label: 'Lomé',
+        magasin_destination: '', localite: '', localite_label: '',
+        ville: '', pays: '', pays_label: '', date_debut: new Date().toISOString().split('T')[0],
+      });
       fetchData();
     } catch { toast.error('Erreur lors de la création'); }
   };
@@ -133,15 +193,12 @@ export default function Logistique() {
     } catch { toast.error('Erreur'); }
   };
 
-  // Nouvelle action : envoie le dossier à la Passation
   const handleEnvoyerPassation = async (id) => {
     try {
       const res = await api.post(`/logistique/missions/${id}/envoyer_passation/`);
       toast.success(res.data.message || 'Dossier envoyé à la Passation');
       fetchData();
-    } catch (err) {
-      toast.error(err.response?.data?.erreur || 'Erreur');
-    }
+    } catch (err) { toast.error(err.response?.data?.erreur || 'Erreur'); }
   };
 
   const handleCloturer = async (id) => {
@@ -149,9 +206,7 @@ export default function Logistique() {
       const res = await api.post(`/logistique/missions/${id}/cloturer/`);
       toast.success(res.data.message || 'Logistique clôturée !');
       fetchData();
-    } catch (err) {
-      toast.error(err.response?.data?.erreur || 'Erreur');
-    }
+    } catch (err) { toast.error(err.response?.data?.erreur || 'Erreur'); }
   };
 
   const handleConfirmerLivraison = async (id) => {
@@ -165,6 +220,10 @@ export default function Logistique() {
   return (
     <Layout title="Service Logistique" subtitle="Gestion des missions et livraisons">
       <div className="flex flex-col gap-4">
+
+        {/* Tableau de bord */}
+        <TableauBordSection statuts={['logistique_initial', 'logistique_final']} titre="Logistique" />
+
         <div className="flex items-center justify-between">
           <div className="flex gap-1 bg-white rounded-lg p-1 border border-gray-200">
             <button onClick={() => setActiveTab('missions')}
@@ -294,7 +353,7 @@ export default function Logistique() {
                       <td className="px-3 py-2 text-gray-400">{l.date_fin   || '—'}</td>
                       <td className="px-3 py-2">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                          l.statut === 'livre' ? 'bg-green-100 text-green-700' :
+                          l.statut === 'livre'  ? 'bg-green-100 text-green-700' :
                           l.statut === 'echoue' ? 'bg-red-100 text-red-700' :
                           'bg-amber-100 text-amber-700'
                         }`}>
@@ -333,52 +392,66 @@ export default function Logistique() {
             </div>
             <form onSubmit={handleCreateMission} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
+
+                {/* Dossier */}
+                <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Dossier <span className="text-red-500">*</span></label>
-                  <select value={form.dossier} onChange={(e) => setForm({...form, dossier: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">Sélectionner...</option>
-                    {dossiers.map((d) => (
-                      <option key={d.id} value={d.id}>{d.numero_dossier} — {d.client_nom}</option>
-                    ))}
-                  </select>
+                  <ComboBox
+                    value={form.dossier_label}
+                    onChange={(val) => {
+                      const found = trouverDossier(val);
+                      setForm({ ...form, dossier: found ? String(found.id) : '', dossier_label: val });
+                    }}
+                    options={dossierOptions}
+                    placeholder="Rechercher un dossier..."
+                  />
                 </div>
+
+                {/* Terminal */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Terminal <span className="text-red-500">*</span></label>
-                  <select value={form.terminal} onChange={(e) => setForm({...form, terminal: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">Sélectionner...</option>
-                    <option value="T.TL">Port 1 — T.TL</option>
-                    <option value="LCT">Port 2 — LCT</option>
-                    <option value="autre">Autre</option>
-                  </select>
+                  <ComboBox
+                    value={form.terminal_label}
+                    onChange={(val) => setForm({ ...form, terminal: TERMINAUX_MAP[val] || val, terminal_label: val })}
+                    options={TERMINAUX}
+                    placeholder="Port 1 — T.TL..."
+                  />
                 </div>
+
+                {/* Montant DFU */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Montant DFU (FCFA) <span className="text-red-500">*</span></label>
                   <input type="number" value={form.montant_dfu}
                     onChange={(e) => setForm({...form, montant_dfu: e.target.value})}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
+
+                {/* Type de bon */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Type de bon <span className="text-red-500">*</span></label>
-                  <select value={form.type_bon} onChange={(e) => setForm({...form, type_bon: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">Sélectionner...</option>
-                    <option value="BAD">BAD</option>
-                    <option value="BAD_manutention">BAD Manutention</option>
-                    <option value="appointement_LCT">Appointement LCT</option>
-                  </select>
+                  <ComboBox
+                    value={form.type_bon_label}
+                    onChange={(val) => setForm({ ...form, type_bon: TYPES_BON_MAP[val] || val, type_bon_label: val })}
+                    options={TYPES_BON}
+                    placeholder="BAD, Appointement..."
+                  />
                 </div>
+
+                {/* Camion */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Camion <span className="text-red-500">*</span></label>
-                  <select value={form.camion} onChange={(e) => setForm({...form, camion: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">Sélectionner...</option>
-                    {camions.map((c) => (
-                      <option key={c.id} value={c.id}>{c.immatriculation} — {c.nom_chauffeur}</option>
-                    ))}
-                  </select>
+                  <ComboBox
+                    value={form.camion_label}
+                    onChange={(val) => {
+                      const found = trouverCamion(val);
+                      setForm({ ...form, camion: found ? String(found.id) : '', camion_label: val });
+                    }}
+                    options={camionOptions}
+                    placeholder="Immatriculation — Chauffeur..."
+                  />
                 </div>
+
+                {/* Date début */}
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Date début <span className="text-red-500">*</span></label>
                   <input type="date" value={form.date_debut}
@@ -414,25 +487,39 @@ export default function Logistique() {
             </div>
             <form onSubmit={handleCreateLivraison} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
+
+                {/* Mission */}
+                <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Mission <span className="text-red-500">*</span></label>
-                  <select value={livForm.logistique} onChange={(e) => setLivForm({...livForm, logistique: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">Sélectionner...</option>
-                    {missions.map((m) => (
-                      <option key={m.id} value={m.id}>{m.dossier_numero}</option>
-                    ))}
-                  </select>
+                  <ComboBox
+                    value={livForm.logistique_label}
+                    onChange={(val) => {
+                      const found = trouverMission(val);
+                      setLivForm({ ...livForm, logistique: found ? String(found.id) : '', logistique_label: val });
+                    }}
+                    options={missionOptions}
+                    placeholder="Rechercher un dossier de mission..."
+                  />
                 </div>
-                <div className="flex flex-col gap-1">
+
+                {/* Zone livraison */}
+                <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Zone de livraison <span className="text-red-500">*</span></label>
-                  <select value={livForm.zone_livraison} onChange={(e) => setLivForm({...livForm, zone_livraison: e.target.value})}
-                    className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="lome">Lomé</option>
-                    <option value="hors_lome">Hors Lomé (Togo)</option>
-                    <option value="hors_togo">Hors Togo</option>
-                  </select>
+                  <ComboBox
+                    value={livForm.zone_label}
+                    onChange={(val) => setLivForm({
+                      ...livForm,
+                      zone_livraison: ZONES_MAP[val] || 'lome',
+                      zone_label: val,
+                      magasin_destination: '', localite: '', localite_label: '',
+                      ville: '', pays: '', pays_label: '',
+                    })}
+                    options={ZONES_OPTIONS}
+                    placeholder="Lomé, Hors Lomé, Hors Togo..."
+                  />
                 </div>
+
+                {/* Champs selon la zone */}
                 {livForm.zone_livraison === 'lome' && (
                   <div className="flex flex-col gap-1 col-span-2">
                     <label className="text-[10px] font-medium text-gray-500 uppercase">Magasin / Entrepôt <span className="text-red-500">*</span></label>
@@ -442,39 +529,42 @@ export default function Logistique() {
                       className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                   </div>
                 )}
+
                 {livForm.zone_livraison === 'hors_lome' && (
                   <div className="flex flex-col gap-1 col-span-2">
                     <label className="text-[10px] font-medium text-gray-500 uppercase">Localité <span className="text-red-500">*</span></label>
-                    <select value={livForm.localite} onChange={(e) => setLivForm({...livForm, localite: e.target.value})}
-                      className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                      <option value="">Sélectionner...</option>
-                      {['Aného', 'Bassar', 'Kara', 'Dapaong', 'Atakpamé', 'Sokodé', 'Autre'].map(l => (
-                        <option key={l} value={l}>{l}</option>
-                      ))}
-                    </select>
+                    <ComboBox
+                      value={livForm.localite_label}
+                      onChange={(val) => setLivForm({ ...livForm, localite: val, localite_label: val })}
+                      options={LOCALITES}
+                      placeholder="Kara, Dapaong, Atakpamé..."
+                    />
                   </div>
                 )}
+
                 {livForm.zone_livraison === 'hors_togo' && (
                   <>
                     <div className="flex flex-col gap-1">
                       <label className="text-[10px] font-medium text-gray-500 uppercase">Pays <span className="text-red-500">*</span></label>
-                      <select value={livForm.pays} onChange={(e) => setLivForm({...livForm, pays: e.target.value})}
-                        className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                        <option value="">Sélectionner...</option>
-                        {['Ghana', 'Bénin', 'Burkina Faso', 'Niger', 'Mali', 'Nigeria'].map(p => (
-                          <option key={p} value={p}>{p}</option>
-                        ))}
-                      </select>
+                      <ComboBox
+                        value={livForm.pays_label}
+                        onChange={(val) => setLivForm({ ...livForm, pays: val, pays_label: val })}
+                        options={PAYS_LIVRAISON}
+                        placeholder="Ghana, Bénin, Burkina..."
+                      />
                     </div>
                     <div className="flex flex-col gap-1">
                       <label className="text-[10px] font-medium text-gray-500 uppercase">Ville <span className="text-red-500">*</span></label>
-                      <input value={livForm.ville} onChange={(e) => setLivForm({...livForm, ville: e.target.value})}
+                      <input value={livForm.ville}
+                        onChange={(e) => setLivForm({...livForm, ville: e.target.value})}
                         placeholder="Ville de livraison"
                         className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                     </div>
                   </>
                 )}
-                <div className="flex flex-col gap-1">
+
+                {/* Date départ */}
+                <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Date départ <span className="text-red-500">*</span></label>
                   <input type="date" value={livForm.date_debut}
                     onChange={(e) => setLivForm({...livForm, date_debut: e.target.value})}

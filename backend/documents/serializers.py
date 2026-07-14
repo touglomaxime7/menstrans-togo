@@ -4,6 +4,7 @@ from .models import Document, HistoriqueDocument, Notification
 
 class DocumentSerializer(serializers.ModelSerializer):
     dossier_numero     = serializers.CharField(source='dossier.numero_dossier', read_only=True)
+    client_nom         = serializers.CharField(source='dossier.client.nom', read_only=True)
     type_label         = serializers.CharField(source='get_type_document_display', read_only=True)
     statut_label       = serializers.CharField(source='get_statut_display', read_only=True)
     assigne_a_nom      = serializers.CharField(source='assigne_a.nom_complet', read_only=True)
@@ -13,7 +14,7 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Document
         fields = [
-            'id', 'code_document', 'dossier', 'dossier_numero',
+            'id', 'code_document', 'dossier', 'dossier_numero', 'client_nom',
             'type_document', 'type_label', 'nom_fichier', 'chemin_fichier',
             'taille_fichier', 'taille_fichier_mb', 'nombre_pages',
             'statut', 'statut_label',

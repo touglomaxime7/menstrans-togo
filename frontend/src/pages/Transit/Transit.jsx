@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import TableauBordSection from '../../components/TableauBordSection';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -141,6 +142,8 @@ export default function Transit() {
   return (
     <Layout title="Service Transit" subtitle="Déclarations douanières et études de valeur">
       <div className="flex flex-col gap-4">
+          {/* Tableau de bord */}
+        <TableauBordSection statuts={['transit']} titre="Transit" />
 
         {/* Tabs + boutons */}
         <div className="flex items-center justify-between">

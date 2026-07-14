@@ -3,71 +3,74 @@ import Layout from '../../components/Layout/Layout';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
+import ComboBox from '../../components/ComboBox';
 
 const BADGE_STATUT = {
-  en_attente:   'bg-amber-100 text-amber-800',
-  en_traitement:'bg-blue-100 text-blue-800',
-  valide:       'bg-green-100 text-green-800',
-  rejete:       'bg-red-100 text-red-800',
-  archive:      'bg-gray-100 text-gray-600',
+  en_attente:    'bg-amber-100 text-amber-800',
+  en_traitement: 'bg-blue-100 text-blue-800',
+  valide:        'bg-green-100 text-green-800',
+  rejete:        'bg-red-100 text-red-800',
+  archive:       'bg-gray-100 text-gray-600',
 };
 
 const TYPES_DOCUMENTS = [
-  { value: 'bordereau',           label: 'Bordereau' },
-  { value: 'manifeste',           label: 'Manifeste' },
-  { value: 'facture_commerciale', label: 'Facture commerciale' },
-  { value: 'certificat_origine',  label: 'Certificat d\'origine' },
-  { value: 'liste_colisage',      label: 'Liste de colisage' },
-  { value: 'bon_livraison',       label: 'Bon de livraison' },
-  { value: 'besc',                label: 'BESC (Bordereau Électronique de Suivi des Cargaisons)' },
-  { value: 'connaissement',       label: 'Connaissement / Bill of Lading (OBL)' },
-  { value: 'awb_lta',             label: 'AWB / LTA (Lettre de Transport Aérien)' },
-  { value: 'cmr',                 label: 'CMR / Lettre de voiture' },
-  { value: 'declaration_export',  label: 'Déclaration d\'exportation' },
-  { value: 'autorisation_import', label: 'Autorisation d\'importation' },
-  { value: 'assurance_maritime',  label: 'Ordre d\'assurance maritime' },
-  { value: 'booking',             label: 'Booking (export)' },
-  { value: 'certificat_sanitaire',label: 'Certificat sanitaire' },
-  { value: 'facture',             label: 'Facture' },
-  { value: 'bae',                 label: 'BAE (Bon À Enlever)' },
-  { value: 'bad',                 label: 'BAD (Bon À Délivrer)' },
-  { value: 'dfu',                 label: 'DFU (Droit de Fret Unique)' },
-  { value: 'autre',               label: 'Autre' },
+  { value: 'bordereau',            label: 'Bordereau' },
+  { value: 'manifeste',            label: 'Manifeste' },
+  { value: 'facture_commerciale',  label: 'Facture commerciale' },
+  { value: 'certificat_origine',   label: "Certificat d'origine" },
+  { value: 'liste_colisage',       label: 'Liste de colisage' },
+  { value: 'bon_livraison',        label: 'Bon de livraison' },
+  { value: 'besc',                 label: 'BESC (Bordereau Électronique de Suivi des Cargaisons)' },
+  { value: 'connaissement',        label: 'Connaissement / Bill of Lading (OBL)' },
+  { value: 'awb_lta',              label: 'AWB / LTA (Lettre de Transport Aérien)' },
+  { value: 'cmr',                  label: 'CMR / Lettre de voiture' },
+  { value: 'declaration_export',   label: "Déclaration d'exportation" },
+  { value: 'autorisation_import',  label: "Autorisation d'importation" },
+  { value: 'assurance_maritime',   label: 'Ordre d\'assurance maritime' },
+  { value: 'booking',              label: 'Booking (export)' },
+  { value: 'certificat_sanitaire', label: 'Certificat sanitaire' },
+  { value: 'facture',              label: 'Facture' },
+  { value: 'bae',                  label: 'BAE (Bon À Enlever)' },
+  { value: 'bad',                  label: 'BAD (Bon À Délivrer)' },
+  { value: 'dfu',                  label: 'DFU (Droit de Fret Unique)' },
+  { value: 'autre',                label: 'Autre' },
 ];
 
+const TYPES_LABELS = TYPES_DOCUMENTS.map(t => t.label);
+
 const WORKFLOW = {
-  assistant_directeur: { next_role: 'transit',     next_label: 'Service Transit' },
-  transit:             { next_role: 'passation',   next_label: 'Service Passation' },
-  passation:           { next_role: 'logistique',  next_label: 'Service Logistique' },
-  logistique:          { next_role: 'caisse',      next_label: 'Service Caisse' },
-  admin:               { next_role: 'transit',     next_label: 'Service Transit' },
-  direction:           { next_role: 'transit',     next_label: 'Service Transit' },
+  assistant_directeur: { next_role: 'transit',    next_label: 'Service Transit' },
+  transit:             { next_role: 'passation',  next_label: 'Service Passation' },
+  passation:           { next_role: 'logistique', next_label: 'Service Logistique' },
+  logistique:          { next_role: 'caisse',     next_label: 'Service Caisse' },
+  admin:               { next_role: 'transit',    next_label: 'Service Transit' },
+  direction:           { next_role: 'transit',    next_label: 'Service Transit' },
 };
 
 export default function Documents() {
   const { utilisateur } = useAuth();
-  const [documents,  setDocuments]  = useState([]);
-  const [dossiers,   setDossiers]   = useState([]);
-  const [users,      setUsers]      = useState([]);
-  const [loading,    setLoading]    = useState(true);
-  const [search,     setSearch]     = useState('');
-  const [showModal,  setShowModal]  = useState(false);
+  const [documents,      setDocuments]      = useState([]);
+  const [dossiers,       setDossiers]       = useState([]);
+  const [users,          setUsers]          = useState([]);
+  const [loading,        setLoading]        = useState(true);
+  const [search,         setSearch]         = useState('');
+  const [showModal,      setShowModal]      = useState(false);
   const [showHistorique, setShowHistorique] = useState(false);
   const [selectedDoc,    setSelectedDoc]    = useState(null);
   const [historique,     setHistorique]     = useState([]);
   const fileInputRef   = useRef(null);
   const cameraInputRef = useRef(null);
 
-  // Refs pour la caméra en direct
   const videoRef  = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const [cameraActive, setCameraActive] = useState(false);
 
   const [form, setForm] = useState({
-    dossier: '',
-    type_document: 'bordereau',
-    observations: '',
+    dossier:       '',
+    dossier_label: '',
+    type_document: '',
+    observations:  '',
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview,  setFilePreview]  = useState(null);
@@ -104,7 +107,6 @@ export default function Documents() {
     fetchData();
   }, []);
 
-  // Validation commune d'un fichier (taille + type)
   const validerFichier = (file) => {
     const typesAcceptes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!typesAcceptes.includes(file.type)) {
@@ -129,47 +131,41 @@ export default function Documents() {
     }
   };
 
-  // 1. Choisir un fichier OU 2. Prendre une photo simple (même gestionnaire)
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && validerFichier(file)) {
       appliquerFichier(file);
-      stopCamera(); // au cas où la caméra était ouverte
+      stopCamera();
     }
   };
 
-  // 3. Caméra en direct — démarrage
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }, // caméra arrière sur mobile si dispo
+        video: { facingMode: 'environment' },
         audio: false,
       });
       streamRef.current = stream;
       setCameraActive(true);
-      // On attend que l'élément vidéo soit monté
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
         }
       }, 100);
-    } catch (err) {
-      toast.error("Impossible d'accéder à la caméra. Vérifiez les autorisations du navigateur.");
+    } catch {
+      toast.error("Impossible d'accéder à la caméra.");
     }
   };
 
-  // Caméra en direct — capture de l'image
   const capturePhoto = () => {
     const video  = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-
     canvas.width  = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
     canvas.toBlob((blob) => {
       if (!blob) return;
       const file = new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
@@ -179,7 +175,6 @@ export default function Documents() {
     }, 'image/jpeg', 0.9);
   };
 
-  // Caméra en direct — arrêt
   const stopCamera = () => {
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -188,13 +183,18 @@ export default function Documents() {
     setCameraActive(false);
   };
 
-  // Fermer le modal proprement (et couper la caméra)
   const fermerModal = () => {
     stopCamera();
     setShowModal(false);
-    setForm({ dossier: '', type_document: 'bordereau', observations: '' });
+    setForm({ dossier: '', dossier_label: '', type_document: '', observations: '' });
     setSelectedFile(null);
     setFilePreview(null);
+  };
+
+  // Trouver la valeur du type_document à partir du label
+  const getTypeValue = (label) => {
+    const found = TYPES_DOCUMENTS.find(t => t.label === label);
+    return found ? found.value : label.toLowerCase().replace(/\s+/g, '_');
   };
 
   const handleUpload = async (e) => {
@@ -205,10 +205,10 @@ export default function Documents() {
     }
 
     const formData = new FormData();
-    formData.append('fichier', selectedFile);
-    formData.append('dossier', form.dossier);
-    formData.append('type_document', form.type_document);
-    formData.append('observations', form.observations);
+    formData.append('fichier',        selectedFile);
+    formData.append('dossier',        form.dossier);
+    formData.append('type_document',  getTypeValue(form.type_document));
+    formData.append('observations',   form.observations);
 
     try {
       await api.post('/documents/', formData, {
@@ -218,7 +218,7 @@ export default function Documents() {
       fermerModal();
       fetchDocuments();
     } catch {
-      toast.error('Erreur lors de l\'upload du document');
+      toast.error("Erreur lors de l'upload du document");
     }
   };
 
@@ -226,7 +226,7 @@ export default function Documents() {
     if (!utilisateur) return;
     const workflow = WORKFLOW[utilisateur.role];
     if (!workflow) {
-      toast.error('Vous n\'avez pas le droit d\'envoyer des documents');
+      toast.error("Vous n'avez pas le droit d'envoyer des documents");
       return;
     }
     const utilisateurCible = users.find(u => u.role === workflow.next_role && u.actif);
@@ -240,7 +240,7 @@ export default function Documents() {
       toast.success(`Document envoyé au ${workflow.next_label} !`);
       fetchDocuments();
     } catch {
-      toast.error('Erreur lors de l\'envoi');
+      toast.error("Erreur lors de l'envoi");
     }
   };
 
@@ -264,10 +264,10 @@ export default function Documents() {
 
   const handleTelecharger = async (doc) => {
     try {
-      const res = await api.get(`/documents/${doc.id}/telecharger/`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const res  = await api.get(`/documents/${doc.id}/telecharger/`, { responseType: 'blob' });
+      const url  = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
-      link.href = url;
+      link.href  = url;
       link.setAttribute('download', doc.nom_fichier);
       document.body.appendChild(link);
       link.click();
@@ -282,18 +282,11 @@ export default function Documents() {
       setHistorique(res.data);
       setSelectedDoc(doc);
       setShowHistorique(true);
-    } catch { toast.error('Erreur lors du chargement de l\'historique'); }
+    } catch { toast.error("Erreur lors du chargement de l'historique"); }
   };
 
-  const peutEnvoyer = () => {
-    if (!utilisateur) return false;
-    return WORKFLOW[utilisateur.role] !== undefined;
-  };
-
-  const getProchainService = () => {
-    if (!utilisateur) return '';
-    return WORKFLOW[utilisateur.role]?.next_label || '';
-  };
+  const peutEnvoyer     = () => utilisateur && WORKFLOW[utilisateur.role] !== undefined;
+  const getProchainService = () => utilisateur ? WORKFLOW[utilisateur.role]?.next_label || '' : '';
 
   const filtered = documents.filter(d =>
     !search ||
@@ -302,6 +295,9 @@ export default function Documents() {
     d.dossier_numero?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Labels dossiers pour ComboBox
+  const dossierOptions = dossiers.map(d => `${d.numero_dossier} — ${d.client_nom}`);
+
   return (
     <Layout title="Gestion Documentaire" subtitle={`${documents.length} documents`}>
       <div className="flex flex-col gap-4">
@@ -309,11 +305,11 @@ export default function Documents() {
         {/* Stats */}
         <div className="grid grid-cols-5 gap-3">
           {[
-            { label: 'Total',        value: documents.length,                                          bg: 'bg-gray-50' },
-            { label: 'En attente',   value: documents.filter(d => d.statut === 'en_attente').length,    bg: 'bg-amber-50' },
-            { label: 'En traitement',value: documents.filter(d => d.statut === 'en_traitement').length, bg: 'bg-blue-50' },
-            { label: 'Validés',      value: documents.filter(d => d.statut === 'valide').length,        bg: 'bg-green-50' },
-            { label: 'Rejetés',      value: documents.filter(d => d.statut === 'rejete').length,        bg: 'bg-red-50' },
+            { label: 'Total',         value: documents.length,                                           bg: 'bg-gray-50' },
+            { label: 'En attente',    value: documents.filter(d => d.statut === 'en_attente').length,    bg: 'bg-amber-50' },
+            { label: 'En traitement', value: documents.filter(d => d.statut === 'en_traitement').length, bg: 'bg-blue-50' },
+            { label: 'Validés',       value: documents.filter(d => d.statut === 'valide').length,        bg: 'bg-green-50' },
+            { label: 'Rejetés',       value: documents.filter(d => d.statut === 'rejete').length,        bg: 'bg-red-50' },
           ].map((s) => (
             <div key={s.label} className={`${s.bg} rounded-lg p-3 border border-gray-200`}>
               <div className="text-[10px] text-gray-400 mb-1">{s.label}</div>
@@ -352,6 +348,7 @@ export default function Documents() {
                 <tr className="bg-gray-50 border-b border-gray-100">
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Code</th>
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Nom fichier</th>
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Taille</th>
@@ -366,6 +363,7 @@ export default function Documents() {
                   <tr key={d.id} className="border-b border-gray-50 hover:bg-gray-50">
                     <td className="px-3 py-2 font-mono text-blue-600 font-medium">{d.code_document}</td>
                     <td className="px-3 py-2 text-gray-700">{d.dossier_numero}</td>
+                    <td className="px-3 py-2 text-gray-700 font-medium">{d.client_nom || '—'}</td>
                     <td className="px-3 py-2 text-gray-500">{d.type_label}</td>
                     <td className="px-3 py-2 text-gray-700 max-w-[200px] truncate">{d.nom_fichier}</td>
                     <td className="px-3 py-2 text-gray-400">{d.taille_fichier_mb} MB</td>
@@ -388,7 +386,7 @@ export default function Documents() {
                           <button onClick={() => handleEnvoyerService(d)}
                             className="h-6 px-2 bg-purple-50 text-purple-700 rounded text-[10px] border border-purple-200 hover:bg-purple-100"
                             title={`Envoyer au ${getProchainService()}`}>
-                            ➤ Envoyer au {getProchainService()}
+                            ➤ {getProchainService()}
                           </button>
                         )}
                         {d.statut === 'en_traitement' && (
@@ -422,33 +420,43 @@ export default function Documents() {
               <button onClick={fermerModal} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <form onSubmit={handleUpload} className="p-5 flex flex-col gap-4">
+
+              {/* Sélection dossier — ComboBox */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Dossier *</label>
-                <select value={form.dossier} onChange={(e) => setForm({...form, dossier: e.target.value})}
-                  className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                  <option value="">Sélectionner...</option>
-                  {dossiers.map((d) => (
-                    <option key={d.id} value={d.id}>{d.numero_dossier} — {d.client_nom}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-medium text-gray-500 uppercase">Type de document *</label>
-                <select value={form.type_document} onChange={(e) => setForm({...form, type_document: e.target.value})}
-                  className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                  {TYPES_DOCUMENTS.map((t) => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
+                <ComboBox
+                  value={form.dossier_label}
+                  onChange={(val) => {
+                    const found = dossiers.find(d =>
+                      `${d.numero_dossier} — ${d.client_nom}`.toLowerCase().includes(val.toLowerCase())
+                    );
+                    setForm({
+                      ...form,
+                      dossier:       found ? String(found.id) : '',
+                      dossier_label: val,
+                    });
+                  }}
+                  options={dossierOptions}
+                  placeholder="Rechercher un dossier ou un client..."
+                />
               </div>
 
-              {/* Zone source du document */}
+              {/* Type de document — ComboBox */}
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-medium text-gray-500 uppercase">Type de document *</label>
+                <ComboBox
+                  value={form.type_document}
+                  onChange={(val) => setForm({ ...form, type_document: val })}
+                  options={TYPES_LABELS}
+                  placeholder="Rechercher ou saisir un type..."
+                />
+              </div>
+
+              {/* Zone source */}
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">
                   Source du document * <span className="text-gray-400 normal-case">(PDF, JPG, PNG — max 10 MB)</span>
                 </label>
-
-                {/* Boutons de choix */}
                 <div className="grid grid-cols-3 gap-2">
                   <button type="button" onClick={() => fileInputRef.current?.click()}
                     className="h-9 border border-gray-200 rounded-md text-[11px] text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-1">
@@ -468,7 +476,6 @@ export default function Documents() {
                   </button>
                 </div>
 
-                {/* Inputs cachés */}
                 <input type="file" ref={fileInputRef} onChange={handleFileChange}
                   accept="application/pdf,image/jpeg,image/jpg,image/png,image/webp"
                   className="hidden"/>
@@ -476,7 +483,6 @@ export default function Documents() {
                   accept="image/*" capture="environment"
                   className="hidden"/>
 
-                {/* Aperçu caméra en direct */}
                 {cameraActive && (
                   <div className="mt-1 border border-blue-200 rounded-md p-2 bg-blue-50">
                     <video ref={videoRef} className="w-full rounded-md bg-black" playsInline muted />
@@ -486,17 +492,14 @@ export default function Documents() {
                     </button>
                   </div>
                 )}
-                {/* Canvas caché pour la capture */}
                 <canvas ref={canvasRef} className="hidden" />
 
-                {/* Fichier sélectionné */}
                 {selectedFile && !cameraActive && (
                   <div className="text-[10px] text-green-600 mt-1">
                     ✓ {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </div>
                 )}
 
-                {/* Aperçu de l'image choisie/capturée */}
                 {filePreview && !cameraActive && (
                   <div className="mt-1 border border-gray-200 rounded-md p-2">
                     <div className="text-[10px] text-gray-500 mb-1">Aperçu :</div>
@@ -515,6 +518,7 @@ export default function Documents() {
                 <textarea value={form.observations} onChange={(e) => setForm({...form, observations: e.target.value})}
                   className="border border-gray-200 rounded-md px-3 py-2 text-xs outline-none resize-none h-16 focus:border-blue-400"/>
               </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={fermerModal}
                   className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>

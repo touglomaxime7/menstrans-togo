@@ -57,9 +57,9 @@ class MontantViewSet(viewsets.ModelViewSet):
                 date_debut__month=today.month
             )
         elif periode == 'trimestriel':
-            trimestre = (today.month - 1) // 3
+            trimestre  = (today.month - 1) // 3
             mois_debut = trimestre * 3 + 1
-            queryset = Montant.objects.filter(
+            queryset   = Montant.objects.filter(
                 date_debut__year=today.year,
                 date_debut__month__gte=mois_debut
             )
@@ -68,8 +68,8 @@ class MontantViewSet(viewsets.ModelViewSet):
         else:
             queryset = Montant.objects.all()
 
-        total_debours  = queryset.aggregate(t=Sum('montant_debours'))['t']  or 0
-        total_factures = queryset.aggregate(t=Sum('montant_facture'))['t']  or 0
+        total_debours  = queryset.aggregate(t=Sum('montant_debours'))['t'] or 0
+        total_factures = queryset.aggregate(t=Sum('montant_facture'))['t'] or 0
 
         return Response({
             'periode':        periode,
@@ -80,11 +80,50 @@ class MontantViewSet(viewsets.ModelViewSet):
         })
 
     @action(detail=False, methods=['get'])
-    def aujourd_hui(self, request):
-        today    = timezone.now().date()
-        queryset = self.get_queryset().filter(date_debut=today)
-        serializer = MontantSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def recettes_journalieres(self, request):
+        """Recettes journalières pour le directeur : détail + total."""
+        if not (request.user.est_admin or request.user.role in ('direction', 'assistant_directeur')):
+            return Response({'error': 'Accès refusé'}, status=403)
+
+        date_str = request.query_params.get('date', str(timezone.now().date()))
+        try:
+            from datetime import date
+            jour = date.fromisoformat(date_str)
+        except ValueError:
+            return Response({'error': 'Format de date invalide (YYYY-MM-DD)'}, status=400)
+
+        montants_jour = Montant.objects.filter(
+            date_debut=jour,
+            statut_paiement='paye'
+        ).select_related('dossier', 'dossier__client', 'enregistre_par')
+
+        detail = []
+        for m in montants_jour:
+            detail.append({
+                'id':              m.id,
+                'dossier':         m.dossier.numero_dossier,
+                'client':          m.dossier.client.nom,
+                'libelle':         m.libelle,
+                'type_montant':    m.type_montant,
+                'mode_paiement':   m.mode_paiement,
+                'montant_debours': float(m.montant_debours),
+                'montant_facture': float(m.montant_facture),
+                'enregistre_par':  m.enregistre_par.nom_complet,
+            })
+
+        totaux = montants_jour.aggregate(
+            total_debours=Sum('montant_debours'),
+            total_factures=Sum('montant_facture'),
+        )
+
+        return Response({
+            'date':             str(jour),
+            'nb_operations':    montants_jour.count(),
+            'total_debours':    float(totaux['total_debours'] or 0),
+            'total_recettes':   float(totaux['total_factures'] or 0),
+            'solde_journalier': float((totaux['total_factures'] or 0) - (totaux['total_debours'] or 0)),
+            'detail':           detail,
+        })
 
 
 class FactureViewSet(viewsets.ModelViewSet):
@@ -95,55 +134,12 @@ class FactureViewSet(viewsets.ModelViewSet):
     search_fields      = ['numero_facture', 'emetteur', 'dossier__numero_dossier']
 
     def get_queryset(self):
-        user  = self.request.user
-        today = timezone.now().date()
-
-        date_debut = self.request.query_params.get('date_debut', str(today))
-        date_fin   = self.request.query_params.get('date_fin',   str(today))
-
+        user = self.request.user
         if user.est_admin:
-            queryset = Facture.objects.select_related('dossier', 'enregistre_par')
+            return Facture.objects.select_related('dossier', 'enregistre_par')
         elif user.role in ('caisse', 'comptabilite'):
-            queryset = Facture.objects.select_related('dossier', 'enregistre_par')
-        else:
-            queryset = Facture.objects.none()
-
-        if date_debut:
-            queryset = queryset.filter(date_debut__gte=date_debut)
-        if date_fin:
-            queryset = queryset.filter(date_debut__lte=date_fin)
-
-        return queryset
+            return Facture.objects.select_related('dossier', 'enregistre_par')
+        return Facture.objects.none()
 
     def perform_create(self, serializer):
         serializer.save(enregistre_par=self.request.user)
-
-    @action(detail=True, methods=['post'])
-    def marquer_payee(self, request, pk=None):
-        facture        = self.get_object()
-        facture.statut = 'payee'
-        facture.date_fin = timezone.now().date()
-        facture.save()
-        return Response({'message': 'Facture marquée comme payée'})
-
-    @action(detail=True, methods=['post'])
-    def annuler(self, request, pk=None):
-        if not request.user.est_admin:
-            return Response({'error': 'Accès refusé'}, status=403)
-        facture        = self.get_object()
-        facture.statut = 'annulee'
-        facture.save()
-        return Response({'message': 'Facture annulée'})
-
-    @action(detail=False, methods=['get'])
-    def stats(self, request):
-        if not request.user.role in ('admin', 'direction', 'caisse', 'comptabilite'):
-            return Response({'error': 'Accès refusé'}, status=403)
-        today = timezone.now().date()
-        return Response({
-            'total':       Facture.objects.count(),
-            'en_attente':  Facture.objects.filter(statut='en_attente').count(),
-            'payees':      Facture.objects.filter(statut='payee').count(),
-            'annulees':    Facture.objects.filter(statut='annulee').count(),
-            'aujourd_hui': Facture.objects.filter(date_debut=today).count(),
-        })
