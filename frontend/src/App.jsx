@@ -27,6 +27,7 @@ import EtudesDirection      from './pages/Direction/EtudesDirection';
 // ── Nouvelles pages ───────────────────────────────────────────────────────────
 import GestionContrats      from './pages/Contrats/GestionContrats';
 import RecettesJournalieres from './pages/Direction/RecettesJournalieres';
+import Historique from './pages/Direction/Historique';
 
 export default function App() {
   return (
@@ -59,6 +60,11 @@ export default function App() {
           <Route path="/direction/recettes" element={
             <ProtectedRoute roles={['admin', 'direction', 'assistant_directeur']}>
               <RecettesJournalieres />
+            </ProtectedRoute>
+          } />
+          <Route path="/historique" element={
+            <ProtectedRoute roles={['admin', 'direction']}>
+              <Historique />
             </ProtectedRoute>
           } />
           <Route path="/transit" element={

@@ -8,6 +8,7 @@ const menuItems = [
   { path: '/dossiers',     label: 'Dossiers',        icon: '📁', roles: [], end: false },
   { path: '/contrats',          label: 'Contrats',            icon: '📝', roles: [], end: false },
      { path: '/direction/recettes',label: 'Recettes journalières', icon: '💵', roles: ['admin', 'direction', 'assistant_directeur'], end: false },
+  { path: '/historique', label: 'Historique dossiers', icon: '🕐', roles: ['admin', 'direction'], end: false },
   { path: '/transit',      label: 'Transit',         icon: '🕐', roles: ['transit'], end: false },
   { path: '/passation',    label: 'Passation',       icon: '✅', roles: ['passation'], end: false },
   { path: '/logistique',   label: 'Logistique',      icon: '🚛', roles: ['logistique'], end: false },
