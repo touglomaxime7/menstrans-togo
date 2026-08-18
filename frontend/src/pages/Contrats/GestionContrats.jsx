@@ -6,6 +6,7 @@ import {
 } from '../../api/contrats';
 import { getDossiers } from '../../api/dossiers';
 import ComboBox from '../../components/ComboBox';
+import Layout from '../../components/Layout/Layout';
 
 const PIECES_LABELS = {
   certificat_origine:  "Certificat d'origine",
@@ -269,13 +270,10 @@ export default function GestionContrats() {
   const dossierOptions = dossiers.map(d => `${d.numero_dossier} — ${d.client_nom}`);
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <Layout title="Contrats" subtitle="Gestion des contrats client-direction">
+    <div className="max-w-6xl mx-auto">
       {/* En-tête */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Contrats</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Gestion des contrats client-direction</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mb-6">
         <button onClick={() => setShowForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
           + Nouveau contrat
@@ -634,5 +632,6 @@ export default function GestionContrats() {
         </div>
       )}
     </div>
+    </Layout>
   );
 }
