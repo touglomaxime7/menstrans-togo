@@ -16,7 +16,7 @@ class Command(BaseCommand):
         email    = os.environ.get('ADMIN_EMAIL')
         password = os.environ.get('ADMIN_PASSWORD')
         nom      = os.environ.get('ADMIN_NOM',    'Admin')
-        prenom   = os.environ.get('ADMIN_PRENOM', 'MENSTRANS')
+        prenom   = os.environ.get('ADMIN_PRENOM', 'e-Trans')
 
         if not email or not password:
             self.stdout.write(self.style.WARNING(

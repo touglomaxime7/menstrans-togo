@@ -36,12 +36,12 @@ export default function Sidebar() {
         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md ring-1 ring-white/20 p-1 flex-shrink-0">
           <img
             src="/logo.jpg"
-            alt="MENSTRANS-TOGO"
+            alt="e-Trans"
             className="w-full h-full object-contain"
           />
         </div>
         <div className="min-w-0">
-          <div className="text-white text-base font-semibold tracking-wide">MENSTRANS</div>
+          <div className="text-white text-base font-semibold tracking-wide">e-Trans</div>
           <div className="flex items-center gap-1.5 mt-0.5">
             <div className="h-px w-3 bg-red-400"></div>
             <div className="text-red-300 text-[10px] font-medium tracking-[0.2em]">TOGO</div>

@@ -43,11 +43,11 @@ export default function Login() {
           <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-lg ring-2 ring-blue-100 mb-4 p-3">
             <img
               src="/logo.jpg"
-              alt="MENSTRANS-TOGO"
+              alt="e-Trans"
               className="w-full h-full object-contain"
             />
           </div>
-          <h1 className="text-2xl font-bold text-[#1F3864] tracking-wide">MENSTRANS</h1>
+          <h1 className="text-2xl font-bold text-[#1F3864] tracking-wide">e-Trans</h1>
           <div className="flex items-center gap-2 mt-1">
             <div className="h-0.5 w-6 bg-red-400"></div>
             <p className="text-xs text-red-600 font-medium tracking-[0.3em]">TOGO</p>
@@ -122,7 +122,7 @@ export default function Login() {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-[10px] text-gray-400">
-            © 2026 MENSTRANS-TOGO · Tous droits réservés
+            © 2026 e-Trans · Tous droits réservés
           </p>
         </div>
       </div>

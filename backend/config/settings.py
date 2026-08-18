@@ -1,5 +1,5 @@
 """
-MENSTRANS-TOGO — Configuration Django
+e-Trans — Configuration Django
 """
 
 from pathlib import Path

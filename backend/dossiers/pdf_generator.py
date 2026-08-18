@@ -46,7 +46,7 @@ def generer_pdf_dossier(dossier, documents=None, montants=None, factures=None):
     style_normal.fontSize = 10
     
     # En-tête entreprise
-    elements.append(Paragraph("<b>MENSTRANS-TOGO</b>", style_title))
+    elements.append(Paragraph("<b>e-Trans</b>", style_title))
     elements.append(Paragraph("Gestion de Transit & Facturation", ParagraphStyle('center', alignment=TA_CENTER, fontSize=10, textColor=colors.grey)))
     elements.append(Spacer(1, 0.5*cm))
     
@@ -251,7 +251,7 @@ def generer_pdf_dossier(dossier, documents=None, montants=None, factures=None):
     elements.append(Spacer(1, 1*cm))
     elements.append(Paragraph(
         f'<para alignment="center"><font size="8" color="grey">'
-        f'Document généré le {datetime.now().strftime("%d/%m/%Y à %H:%M")} - MENSTRANS-TOGO'
+        f'Document généré le {datetime.now().strftime("%d/%m/%Y à %H:%M")} - e-Trans'
         f'</font></para>',
         style_normal
     ))

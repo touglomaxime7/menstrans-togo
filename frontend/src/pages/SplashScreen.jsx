@@ -36,10 +36,10 @@ export default function SplashScreen() {
 
       <div className="flex flex-col items-center gap-6 z-10">
         <div className="w-48 h-48 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 animate-pulse">
-          <img src="/logo.jpg" alt="MENSTRANS-TOGO" className="w-40 h-40 object-contain"/>
+          <img src="/logo.jpg" alt="e-Trans" className="w-40 h-40 object-contain"/>
         </div>
         <div className="text-center mt-4">
-          <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">MENSTRANS</h1>
+          <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">e-Trans</h1>
           <div className="flex items-center justify-center gap-3 mt-2">
             <div className="h-0.5 w-12 bg-red-400"></div>
             <p className="text-red-300 text-lg font-medium tracking-[0.4em]">TOGO</p>
@@ -62,7 +62,7 @@ export default function SplashScreen() {
 
       <div className="absolute bottom-4 text-center z-10">
         <p className="text-blue-300 text-[10px] tracking-wide">
-          © 2026 MENSTRANS-TOGO · Tous droits réservés
+          © 2026 e-Trans · Tous droits réservés
         </p>
       </div>
     </div>
