@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getRecettesJournalieres } from '../../api/contrats';
+import Layout from '../../components/Layout/Layout';
 
 function formatFCFA(n) {
   return new Intl.NumberFormat('fr-TG', {
@@ -34,13 +35,10 @@ export default function RecettesJournalieres() {
   const soldeColor = (n) => n >= 0 ? 'text-green-600' : 'text-red-600';
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <Layout title="Recettes journalières" subtitle="Tableau de bord — Direction">
+    <div className="max-w-5xl mx-auto">
       {/* En-tête */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Recettes journalières</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Tableau de bord — Direction</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mb-6">
         <input
           type="date"
           value={date}
@@ -133,5 +131,6 @@ export default function RecettesJournalieres() {
         </>
       ) : null}
     </div>
+    </Layout>
   );
 }
