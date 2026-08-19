@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../i18n/LanguageContext';
 import { toast } from 'react-toastify';
 
 export default function Login() {
@@ -10,25 +11,26 @@ export default function Login() {
   const [loading,  setLoading]  = useState(false);
   const [showPwd,  setShowPwd]  = useState(false);
   const { handleLogin } = useAuth();
+  const { t, lang, toggleLang } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      toast.error('Veuillez remplir tous les champs');
+      toast.error(t('champs_requis'));
       return;
     }
     setLoading(true);
     try {
       const userData = await handleLogin(email, password);
-      toast.success('Connexion réussie !');
+      toast.success(t('connexion_reussie'));
       if (userData.utilisateur.role === 'chauffeur') {
         navigate('/mon-camion');
       } else {
         navigate('/dashboard');
       }
     } catch {
-      toast.error('Email ou mot de passe incorrect');
+      toast.error(t('email_mdp_incorrect'));
     } finally {
       setLoading(false);
     }
@@ -54,6 +56,22 @@ export default function Login() {
           backgroundSize: '48px 48px',
         }}
       />
+
+      {/* Sélecteur de langue */}
+      <motion.button
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        onClick={toggleLang}
+        title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+        className="absolute top-5 right-5 z-10 flex items-center gap-1.5 h-8 px-3 rounded-full border border-white/20 bg-white/10 backdrop-blur hover:bg-white/20 transition-colors text-[11px] font-semibold text-white"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+        </svg>
+        {lang.toUpperCase()}
+      </motion.button>
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -96,9 +114,9 @@ export default function Login() {
         >
 
           <div className="mb-6">
-            <h2 className="text-xl font-medium text-gray-800 mb-1">Connexion</h2>
+            <h2 className="text-xl font-medium text-gray-800 mb-1">{t('connexion')}</h2>
             <p className="text-xs text-gray-400">
-              Entrez vos identifiants pour accéder à votre espace
+              {t('connexion_soustitre')}
             </p>
           </div>
 
@@ -106,7 +124,7 @@ export default function Login() {
 
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
-                Adresse email
+                {t('adresse_email')}
               </label>
               <input
                 type="email"
@@ -119,7 +137,7 @@ export default function Login() {
 
             <div className="flex flex-col gap-1">
               <label className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
-                Mot de passe
+                {t('mot_de_passe')}
               </label>
               <div className="relative">
                 <input
@@ -146,7 +164,7 @@ export default function Login() {
               whileTap={{ scale: 0.97 }}
               className="h-10 bg-gradient-to-r from-[#1F3864] to-[#2E5FA3] text-white rounded-md text-sm font-medium transition-colors disabled:opacity-60 mt-2 shadow-md"
             >
-              {loading ? 'Connexion...' : 'Se connecter'}
+              {loading ? t('connexion_en_cours') : t('se_connecter')}
             </motion.button>
           </form>
 
@@ -158,7 +176,7 @@ export default function Login() {
           >
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] text-blue-700">
-              Système opérationnel · Connexion sécurisée JWT
+              {t('systeme_operationnel')}
             </span>
           </motion.div>
         </motion.div>
@@ -171,7 +189,7 @@ export default function Login() {
           className="text-center mt-6"
         >
           <p className="text-[10px] text-white/50">
-            © 2026 e-Trans · Tous droits réservés
+            © 2026 e-Trans · {t('droits_reserves')}
           </p>
         </motion.div>
       </motion.div>

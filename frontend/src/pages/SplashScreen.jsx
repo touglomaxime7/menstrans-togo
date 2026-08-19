@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export default function SplashScreen() {
   const navigate    = useNavigate();
   const { isAuthenticated, utilisateur } = useAuth();
+  const { t } = useLanguage();
   const [pret, setPret] = useState(false);
 
   // Timeout maximum : après 3 secondes on redirige quoi qu'il arrive
@@ -71,7 +73,7 @@ export default function SplashScreen() {
           transition={{ delay: 0.55 }}
           className="text-blue-100 text-sm mt-2 italic tracking-wide"
         >
-          Gestion du Transit &amp; de la Facturation
+          {t('tagline')}
         </motion.p>
       </motion.div>
 
@@ -81,12 +83,12 @@ export default function SplashScreen() {
           <div className="w-2.5 h-2.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '150ms' }}></div>
           <div className="w-2.5 h-2.5 rounded-full bg-white animate-bounce" style={{ animationDelay: '300ms' }}></div>
         </div>
-        <p className="text-blue-200 text-[11px] tracking-[0.3em] font-medium">CHARGEMENT...</p>
+        <p className="text-blue-200 text-[11px] tracking-[0.3em] font-medium">{t('chargement')}</p>
       </div>
 
       <div className="absolute bottom-4 text-center z-10">
         <p className="text-blue-300 text-[10px] tracking-wide">
-          © 2026 e-Trans · Tous droits réservés
+          © 2026 e-Trans · {t('droits_reserves')}
         </p>
       </div>
     </div>

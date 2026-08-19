@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Layout from '../components/Layout/Layout';
 import api from '../api/axios';
+import { useLanguage } from '../i18n/LanguageContext';
 import { useAuth } from '../hooks/useAuth';
 
 const BADGE = {
@@ -16,42 +17,42 @@ const BADGE = {
 
 const ROLE_CONFIG = {
   admin: {
-    titre: 'Tableau de bord - Administrateur',
+    titreKey: 'titre_admin',
     couleur: 'purple',
     icone: '👑',
   },
   direction: {
-    titre: 'Tableau de bord - Direction',
+    titreKey: 'titre_direction',
     couleur: 'blue',
     icone: '🏢',
   },
   assistant_directeur: {
-    titre: 'Tableau de bord - Assistant Directeur',
+    titreKey: 'titre_assistant_directeur',
     couleur: 'purple',
     icone: '📋',
   },
   transit: {
-    titre: 'Tableau de bord - Service Transit',
+    titreKey: 'titre_transit',
     couleur: 'blue',
     icone: '🕐',
   },
   passation: {
-    titre: 'Tableau de bord - Service Passation',
+    titreKey: 'titre_passation',
     couleur: 'amber',
     icone: '✅',
   },
   logistique: {
-    titre: 'Tableau de bord - Service Logistique',
+    titreKey: 'titre_logistique',
     couleur: 'green',
     icone: '🚛',
   },
   caisse: {
-    titre: 'Tableau de bord - Service Caisse',
+    titreKey: 'titre_caisse',
     couleur: 'red',
     icone: '💰',
   },
   comptabilite: {
-    titre: 'Tableau de bord - Comptabilité',
+    titreKey: 'titre_comptabilite',
     couleur: 'indigo',
     icone: '📊',
   },
@@ -59,6 +60,7 @@ const ROLE_CONFIG = {
 
 export default function Dashboard() {
   const { utilisateur, estAdmin } = useAuth();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [dossiers, setDossiers] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -227,7 +229,7 @@ export default function Dashboard() {
   const actions = actionsRapides();
 
   return (
-    <Layout title={config.titre}>
+    <Layout title={t(config.titreKey)}>
       {loading ? (
         <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
           Chargement...
@@ -247,10 +249,10 @@ export default function Dashboard() {
               <div className="text-4xl">{config.icone}</div>
               <div>
                 <div className="text-lg font-medium">
-                  Bonjour {utilisateur?.prenom} {utilisateur?.nom} !
+                  {t('bonjour')} {utilisateur?.prenom} {utilisateur?.nom} !
                 </div>
                 <div className="text-sm text-blue-100 mt-1">
-                  {new Date().toLocaleDateString('fr-FR', { 
+                  {new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', { 
                     weekday: 'long', 
                     day: 'numeric', 
                     month: 'long', 
@@ -289,7 +291,7 @@ export default function Dashboard() {
               className="bg-white rounded-lg border border-gray-200 overflow-hidden"
             >
               <div className="px-4 py-3 border-b border-gray-100">
-                <span className="text-sm font-medium text-gray-800">⚡ Actions rapides</span>
+                <span className="text-sm font-medium text-gray-800">⚡ {t('actions_rapides')}</span>
               </div>
               <div className="p-4 grid grid-cols-4 gap-3">
                 {actions.map((a, i) => (
@@ -321,8 +323,8 @@ export default function Dashboard() {
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">
                 {utilisateur?.role === 'admin' || utilisateur?.role === 'direction' 
-                  ? '📁 Derniers dossiers' 
-                  : '⚠️ Dossiers à traiter'}
+                  ? `📁 ${t('derniers_dossiers')}` 
+                  : `⚠️ ${t('dossiers_a_traiter')}`}
               </span>
               <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
                 {dossiersAction.length} dossier{dossiersAction.length > 1 ? 's' : ''}
@@ -330,18 +332,18 @@ export default function Dashboard() {
             </div>
             {dossiersAction.length === 0 ? (
               <div className="p-8 text-center text-gray-400 text-sm">
-                ✓ Aucun dossier en attente — Tout est à jour !
+                ✓ {t('aucun_dossier_attente')}
               </div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Dossier</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Action</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° {t('nav_dossiers')}</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('client')}</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('type')}</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut')}</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date')}</th>
+                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('action')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -359,7 +361,7 @@ export default function Dashboard() {
                       <td className="px-4 py-2 text-gray-400">{d.date_debut}</td>
                       <td className="px-4 py-2">
                         <button className="h-6 px-2 bg-blue-50 text-blue-700 rounded text-[10px] border border-blue-200 hover:bg-blue-100">
-                          Ouvrir →
+                          {t('ouvrir')} →
                         </button>
                       </td>
                     </tr>

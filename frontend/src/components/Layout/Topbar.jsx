@@ -2,11 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useUI } from '../../context/UIContext';
 import api from '../../api/axios';
 
 export default function Topbar({ title, subtitle }) {
   const { utilisateur } = useAuth();
   const navigate        = useNavigate();
+  const { t, lang, toggleLang } = useLanguage();
+  const { toggleSidebar } = useUI();
   const [query,    setQuery]    = useState('');
   const [results,  setResults]  = useState(null);
   const [loading,  setLoading]  = useState(false);
@@ -14,7 +18,7 @@ export default function Topbar({ title, subtitle }) {
   const wrapperRef = useRef(null);
   const timerRef   = useRef(null);
 
-  const today = new Date().toLocaleDateString('fr-FR', {
+  const today = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
@@ -92,10 +96,21 @@ export default function Topbar({ title, subtitle }) {
 
   return (
     <div className="bg-white h-14 px-4 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
-      {/* Titre */}
-      <div className="flex-shrink-0">
-        <div className="text-sm font-medium text-gray-800">{title}</div>
-        <div className="text-[10px] text-gray-400">{subtitle || today}</div>
+      {/* Bouton menu (hamburger) + Titre */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <button
+          onClick={toggleSidebar}
+          title={t('etendre_menu')}
+          className="w-9 h-9 flex flex-col items-center justify-center gap-1 rounded-md hover:bg-gray-100 transition-colors flex-shrink-0"
+        >
+          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
+        </button>
+        <div>
+          <div className="text-sm font-medium text-gray-800">{title}</div>
+          <div className="text-[10px] text-gray-400">{subtitle || today}</div>
+        </div>
       </div>
 
       {/* Barre de recherche globale */}
@@ -107,7 +122,7 @@ export default function Topbar({ title, subtitle }) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onFocus={() => results && setShowDrop(true)}
-            placeholder="Recherche globale : dossier, client, contrat..."
+            placeholder={t('recherche_globale')}
             className="w-full h-9 pl-8 pr-4 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 bg-gray-50"
           />
           {loading && (
@@ -137,7 +152,7 @@ export default function Topbar({ title, subtitle }) {
 
             {totalResultats === 0 ? (
               <div className="px-4 py-6 text-center text-gray-400 text-xs">
-                Aucun résultat pour "<strong>{query}</strong>"
+                {t('aucun_resultat')} "<strong>{query}</strong>"
               </div>
             ) : (
               <div>
@@ -145,7 +160,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.dossiers.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📁 Dossiers ({results.dossiers.length})
+                      📁 {t('dossiers_label')} ({results.dossiers.length})
                     </div>
                     {results.dossiers.map(d => (
                       <button key={d.id}
@@ -178,7 +193,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.clients.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      👥 Clients ({results.clients.length})
+                      👥 {t('clients_label')} ({results.clients.length})
                     </div>
                     {results.clients.map(c => (
                       <button key={c.id}
@@ -191,7 +206,7 @@ export default function Topbar({ title, subtitle }) {
                           </div>
                         </div>
                         <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full">
-                          Voir profil →
+                          {t('voir_profil')} →
                         </span>
                       </button>
                     ))}
@@ -202,7 +217,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.contrats.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📝 Contrats ({results.contrats.length})
+                      📝 {t('contrats_label')} ({results.contrats.length})
                     </div>
                     {results.contrats.map(c => (
                       <button key={c.id}
@@ -230,7 +245,7 @@ export default function Topbar({ title, subtitle }) {
 
                 {/* Footer */}
                 <div className="px-4 py-2 text-[10px] text-gray-400 text-center bg-gray-50 border-t border-gray-100">
-                  {totalResultats} résultat{totalResultats > 1 ? 's' : ''} pour "{query}"
+                  {totalResultats} {t('resultat')}{totalResultats > 1 ? 's' : ''} {lang === 'fr' ? 'pour' : 'for'} "{query}"
                 </div>
               </div>
             )}
@@ -239,8 +254,20 @@ export default function Topbar({ title, subtitle }) {
         </AnimatePresence>
       </div>
 
-      {/* Droite : date + notif + avatar */}
+      {/* Droite : langue + date + notif + avatar */}
       <div className="flex items-center gap-3 flex-shrink-0">
+        <motion.button
+          onClick={toggleLang}
+          whileTap={{ scale: 0.9 }}
+          title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+          className="flex items-center gap-1.5 h-8 px-2.5 rounded-full border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-[11px] font-semibold text-gray-600"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+          </svg>
+          {lang.toUpperCase()}
+        </motion.button>
         <div className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-200 hidden sm:block">
           {today}
         </div>
