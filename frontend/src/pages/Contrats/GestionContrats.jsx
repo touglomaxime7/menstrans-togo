@@ -51,7 +51,7 @@ const TYPES_PIECES = [
 ];
 
 // ── Composant canvas signature ─────────────────────────────────────────────────
-function SignatureCanvas({ onSave, onCancel, label }) {
+function SignatureCanvas({ onSave, onCancel, label, t }) {
   const canvasRef = useRef(null);
   const drawing   = useRef(false);
   const lastPos   = useRef({ x: 0, y: 0 });
@@ -97,9 +97,9 @@ function SignatureCanvas({ onSave, onCancel, label }) {
           onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={stopDraw}/>
       </div>
       <div className="flex gap-2">
-        <button onClick={effacer} className="flex-1 border border-gray-200 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50">Effacer</button>
-        <button onClick={onCancel} className="flex-1 border border-gray-200 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50">Annuler</button>
-        <button onClick={sauvegarder} className="flex-1 bg-[#1F3864] text-white text-xs py-1.5 rounded-lg hover:bg-[#2E5FA3]">Valider la signature</button>
+        <button onClick={effacer} className="flex-1 border border-gray-200 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50">{t('effacer')}</button>
+        <button onClick={onCancel} className="flex-1 border border-gray-200 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50">{t('annuler')}</button>
+        <button onClick={sauvegarder} className="flex-1 bg-[#1F3864] text-white text-xs py-1.5 rounded-lg hover:bg-[#2E5FA3]">{t('valider_signature')}</button>
       </div>
     </div>
   );
@@ -293,10 +293,10 @@ export default function GestionContrats() {
       {showForm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">Nouveau contrat</h2>
+            <h2 className="text-lg font-bold text-gray-800 mb-4">{t('nouveau_contrat').replace('+ ', '')}</h2>
             <form onSubmit={soumettre} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Dossier *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('dossier_champ')}</label>
                 <ComboBox
                   value={form.dossier_label}
                   onChange={(val) => {
@@ -306,23 +306,23 @@ export default function GestionContrats() {
                     setForm({ ...form, dossier: found ? String(found.id) : '', dossier_label: val });
                   }}
                   options={dossierOptions}
-                  placeholder="Rechercher un dossier ou un client..."
+                  placeholder={t('rechercher_dossier_client')}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Objet du contrat</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('objet_contrat')}</label>
                 <textarea value={form.objet} onChange={e => setForm({ ...form, objet: e.target.value })}
-                  rows={3} placeholder="Décrivez l'objet du contrat..."
+                  rows={3} placeholder={t('decrire_objet')}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Conditions particulières</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('conditions_particulieres')}</label>
                 <textarea value={form.conditions} onChange={e => setForm({ ...form, conditions: e.target.value })}
-                  rows={2} placeholder="Conditions spéciales..."
+                  rows={2} placeholder={t('conditions_speciales')}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date de signature prévue</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('date_signature_prevue')}</label>
                 <input type="date" value={form.date_signature}
                   onChange={e => setForm({ ...form, date_signature: e.target.value })}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"/>
@@ -330,7 +330,7 @@ export default function GestionContrats() {
               <div className="flex gap-3 pt-2">
                 <button type="submit"
                   className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
-                  Créer le contrat
+                  {t('creer_le_contrat')}
                 </button>
                 <button type="button" onClick={() => setShowForm(false)}
                   className="flex-1 border border-gray-300 text-gray-700 py-2 rounded-lg text-sm hover:bg-gray-50">
@@ -361,9 +361,9 @@ export default function GestionContrats() {
             {/* Onglets */}
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-4">
               {[
-                { key: 'pieces',     label: '📋 Pièces' },
-                { key: 'signatures', label: '✍️ Signatures' },
-                { key: 'documents',  label: `📎 Documents (${selected.documents?.length || 0})` },
+                { key: 'pieces',     label: `📋 ${t('onglet_pieces')}` },
+                { key: 'signatures', label: `✍️ ${t('onglet_signatures')}` },
+                { key: 'documents',  label: `📎 ${t('onglet_documents')} (${selected.documents?.length || 0})` },
               ].map(o => (
                 <button key={o.key} onClick={() => setOnglet(o.key)}
                   className={`flex-1 text-xs py-1.5 rounded-md font-medium transition ${
@@ -452,28 +452,28 @@ export default function GestionContrats() {
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <p className="text-sm font-semibold text-gray-700">Signature du Directeur Général</p>
+                      <p className="text-sm font-semibold text-gray-700">{t('signature_dg_titre')}</p>
                       {selected.signe_par_dg_le && (
                         <p className="text-xs text-green-600 mt-0.5">
-                          ✓ Signé le {new Date(selected.signe_par_dg_le).toLocaleDateString('fr-TG')}
+                          ✓ {t('signe_le')} {new Date(selected.signe_par_dg_le).toLocaleDateString('fr-TG')}
                         </p>
                       )}
                     </div>
                     {selected.signature_dg
-                      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Signé</span>
-                      : <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">En attente</span>}
+                      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ {t('signe')}</span>
+                      : <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">{t('en_attente')}</span>}
                   </div>
                   {selected.signature_dg ? (
                     <img src={selected.signature_dg} alt="Signature DG"
                       className="border border-gray-200 rounded-lg bg-white p-2 max-h-24 w-full object-contain"/>
                   ) : signatureMode === 'dg' ? (
-                    <SignatureCanvas label="Dessinez la signature du DG ci-dessous"
+                    <SignatureCanvas t={t} label={t("signature_dg_instructions")}
                       onSave={(b64) => handleSignature(b64, 'dg')}
                       onCancel={() => setSignatureMode(null)}/>
                   ) : (
                     <button onClick={() => setSignatureMode('dg')}
                       className="w-full border-2 border-dashed border-gray-300 rounded-lg py-4 text-sm text-gray-500 hover:border-blue-400 hover:text-blue-600 transition">
-                      ✍️ Cliquer pour signer
+                      ✍️ {t('cliquer_pour_signer')}
                     </button>
                   )}
                 </div>
@@ -482,28 +482,28 @@ export default function GestionContrats() {
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <p className="text-sm font-semibold text-gray-700">Signature du Client</p>
+                      <p className="text-sm font-semibold text-gray-700">{t('signature_client_titre')}</p>
                       {selected.signe_par_client_le && (
                         <p className="text-xs text-green-600 mt-0.5">
-                          ✓ Signé le {new Date(selected.signe_par_client_le).toLocaleDateString('fr-TG')}
+                          ✓ {t('signe_le')} {new Date(selected.signe_par_client_le).toLocaleDateString('fr-TG')}
                         </p>
                       )}
                     </div>
                     {selected.signature_client
-                      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Signé</span>
-                      : <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">En attente</span>}
+                      ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ {t('signe')}</span>
+                      : <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium">{t('en_attente')}</span>}
                   </div>
                   {selected.signature_client ? (
                     <img src={selected.signature_client} alt="Signature Client"
                       className="border border-gray-200 rounded-lg bg-white p-2 max-h-24 w-full object-contain"/>
                   ) : signatureMode === 'client' ? (
-                    <SignatureCanvas label="Dessinez la signature du client ci-dessous"
+                    <SignatureCanvas t={t} label={t("signature_client_instructions")}
                       onSave={(b64) => handleSignature(b64, 'client')}
                       onCancel={() => setSignatureMode(null)}/>
                   ) : (
                     <button onClick={() => setSignatureMode('client')}
                       className="w-full border-2 border-dashed border-gray-300 rounded-lg py-4 text-sm text-gray-500 hover:border-blue-400 hover:text-blue-600 transition">
-                      ✍️ Cliquer pour signer
+                      ✍️ {t('cliquer_pour_signer')}
                     </button>
                   )}
                 </div>
@@ -511,7 +511,7 @@ export default function GestionContrats() {
                 <div className={`text-center text-sm font-medium py-2.5 rounded-lg ${
                   selected.est_signe ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-700'
                 }`}>
-                  {selected.est_signe ? '✓ Contrat signé par les deux parties' : '⏳ En attente des deux signatures'}
+                  {selected.est_signe ? `✓ ${t('contrat_signe_deux_parties')}` : `⏳ ${t('en_attente_deux_signatures')}`}
                 </div>
               </div>
             )}
