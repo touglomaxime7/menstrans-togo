@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Layout from '../components/Layout/Layout';
 import api from '../api/axios';
 import { useAuth } from '../hooks/useAuth';
@@ -235,8 +236,14 @@ export default function Dashboard() {
         <div className="flex flex-col gap-4">
           
           {/* Carte de bienvenue */}
-          <div className="bg-gradient-to-r from-[#1F3864] to-[#2E5FA3] rounded-lg p-5 text-white">
-            <div className="flex items-center gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="relative overflow-hidden bg-gradient-to-r from-[#1F3864] to-[#2E5FA3] bg-200 animate-gradientShift rounded-lg p-5 text-white"
+          >
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl animate-floatSlow pointer-events-none" />
+            <div className="relative flex items-center gap-3">
               <div className="text-4xl">{config.icone}</div>
               <div>
                 <div className="text-lg font-medium">
@@ -252,44 +259,65 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Stats */}
           <div className="grid grid-cols-4 gap-3">
-            {stats.map((s) => (
-              <div key={s.label} className={`${s.bg} rounded-lg p-4 border border-gray-200`}>
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.05 * i }}
+                className={`${s.bg} card-hover rounded-lg p-4 border border-gray-200`}
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div className="text-[10px] text-gray-500">{s.label}</div>
                   <div className="text-xl">{s.icon}</div>
                 </div>
                 <div className={`text-3xl font-bold ${s.color}`}>{s.value}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Actions rapides */}
           {actions.length > 0 && (
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.2 }}
+              className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+            >
               <div className="px-4 py-3 border-b border-gray-100">
                 <span className="text-sm font-medium text-gray-800">⚡ Actions rapides</span>
               </div>
               <div className="p-4 grid grid-cols-4 gap-3">
-                {actions.map((a) => (
-                  <button
+                {actions.map((a, i) => (
+                  <motion.button
                     key={a.label}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.05 * i }}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => navigate(a.path)}
-                    className={`${a.color} h-20 rounded-lg flex flex-col items-center justify-center gap-1 hover:opacity-80 transition-opacity border border-gray-200`}
+                    className={`${a.color} h-20 rounded-lg flex flex-col items-center justify-center gap-1 shadow-sm hover:shadow-md transition-shadow border border-gray-200`}
                   >
                     <span className="text-2xl">{a.icon}</span>
                     <span className="text-xs font-medium">{a.label}</span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Dossiers nécessitant une action */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.3 }}
+            className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+          >
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">
                 {utilisateur?.role === 'admin' || utilisateur?.role === 'direction' 
@@ -339,7 +367,7 @@ export default function Dashboard() {
                 </tbody>
               </table>
             )}
-          </div>
+          </motion.div>
 
         </div>
       )}

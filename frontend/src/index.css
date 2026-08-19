@@ -4,3 +4,24 @@ html {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .card-hover {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px -8px rgba(31, 56, 100, 0.25);
+  }
+  .btn-hover {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  }
+  .btn-hover:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 8px 18px -6px rgba(31, 56, 100, 0.4);
+  }
+  .btn-hover:active {
+    transform: translateY(0px) scale(0.98);
+  }
+}

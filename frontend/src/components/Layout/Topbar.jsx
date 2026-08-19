@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 import api from '../../api/axios';
 
@@ -124,8 +125,15 @@ export default function Topbar({ title, subtitle }) {
         </div>
 
         {/* Dropdown résultats */}
+        <AnimatePresence>
         {showDrop && results && (
-          <div className="absolute top-11 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-96 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-11 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-96 overflow-y-auto"
+          >
 
             {totalResultats === 0 ? (
               <div className="px-4 py-6 text-center text-gray-400 text-xs">
@@ -226,8 +234,9 @@ export default function Topbar({ title, subtitle }) {
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
       {/* Droite : date + notif + avatar */}
@@ -235,10 +244,10 @@ export default function Topbar({ title, subtitle }) {
         <div className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-200 hidden sm:block">
           {today}
         </div>
-        <div className="relative cursor-pointer">
+        <div className="relative cursor-pointer transition-transform hover:scale-110">
           <span className="text-gray-500 text-sm">🔔</span>
         </div>
-        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[9px] font-medium text-blue-800">
+        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[9px] font-medium text-blue-800 transition-transform hover:scale-110 ring-2 ring-transparent hover:ring-blue-200">
           {initiales}
         </div>
       </div>

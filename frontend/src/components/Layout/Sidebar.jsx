@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
 const menuItems = [
@@ -30,15 +31,26 @@ export default function Sidebar() {
     : 'U';
 
   return (
-    <div className="w-64 bg-[#1F3864] flex flex-col min-h-screen flex-shrink-0">
+    <motion.div
+      initial={{ x: -20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="w-64 bg-gradient-to-b from-[#1F3864] to-[#173257] flex flex-col min-h-screen flex-shrink-0 relative overflow-hidden"
+    >
+      {/* Halo décoratif discret */}
+      <div className="absolute -top-16 -left-16 w-52 h-52 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+
       {/* Logo */}
-      <div className="p-5 border-b border-[#2A4A7A] flex items-center gap-3">
-        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md ring-1 ring-white/20 p-1 flex-shrink-0">
-          <img
-            src="/logo.jpg"
-            alt="e-Trans"
-            className="w-full h-full object-contain"
-          />
+      <div className="relative p-5 border-b border-[#2A4A7A] flex items-center gap-3">
+        <div className="relative w-12 h-12 flex-shrink-0">
+          <div className="absolute inset-0 rounded-full bg-blue-300/20 blur-lg animate-pulseGlow" />
+          <div className="relative w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md ring-1 ring-white/20 p-1">
+            <img
+              src="/logo.jpg"
+              alt="e-Trans"
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
         <div className="min-w-0">
           <div className="text-white text-base font-semibold tracking-wide">e-Trans</div>
@@ -50,38 +62,44 @@ export default function Sidebar() {
       </div>
 
       {/* Menu */}
-      <nav className="flex-1 py-3">
+      <nav className="relative flex-1 py-3 overflow-y-auto">
         <div className="px-4 py-2 text-[#5A7FA0] text-[11px] font-medium uppercase tracking-wider">
           Principal
         </div>
-        {menuItems.map((item) => {
+        {menuItems.map((item, index) => {
           if (item.roles.length > 0 && !estAdmin() && !aAcces(item.roles)) {
             return null;
           }
           return (
-            <NavLink
+            <motion.div
               key={item.path}
-              to={item.path}
-              end={item.end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 mx-2 px-4 py-3 rounded-md text-sm cursor-pointer transition-all ${
-                  isActive
-                    ? 'bg-[#2E5FA3] text-white'
-                    : 'text-[#C5DCF0] hover:bg-white/10'
-                }`
-              }
+              initial={{ x: -12, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.03 * index }}
             >
-              <span className="text-lg">{item.icon}</span>
-              <span>{item.label}</span>
-            </NavLink>
+              <NavLink
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 mx-2 px-4 py-3 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                    isActive
+                      ? 'bg-[#2E5FA3] text-white shadow-md translate-x-0.5'
+                      : 'text-[#C5DCF0] hover:bg-white/10 hover:translate-x-0.5'
+                  }`
+                }
+              >
+                <span className="text-lg transition-transform duration-200 group-hover:scale-110">{item.icon}</span>
+                <span>{item.label}</span>
+              </NavLink>
+            </motion.div>
           );
         })}
       </nav>
 
       {/* Footer utilisateur */}
-      <div className="p-4 border-t border-[#2A4A7A]">
+      <div className="relative p-4 border-t border-[#2A4A7A]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#2E5FA3] flex items-center justify-center text-white text-xs font-medium">
+          <div className="w-10 h-10 rounded-full bg-[#2E5FA3] flex items-center justify-center text-white text-xs font-medium ring-2 ring-white/10">
             {initiales}
           </div>
           <div className="flex-1 min-w-0">
@@ -94,13 +112,13 @@ export default function Sidebar() {
           </div>
           <button
             onClick={handleLogout}
-            className="text-[#5A7FA0] hover:text-white text-base"
+            className="text-[#5A7FA0] hover:text-white text-base transition-transform hover:scale-110"
             title="Déconnexion"
           >
             ⏻
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
