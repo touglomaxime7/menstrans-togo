@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import Layout from '../components/Layout/Layout';
+import { useLanguage } from '../i18n/LanguageContext';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../hooks/useAuth';
 
 export default function MonProfil() {
+  const { t } = useLanguage();
   const { utilisateur } = useAuth();
   const [form, setForm] = useState({
     ancien_password: '',
@@ -50,7 +52,7 @@ export default function MonProfil() {
   };
 
   return (
-    <Layout title="Mon Profil" subtitle="Gérer mon compte et mon mot de passe">
+    <Layout title={t('mon_profil_titre')} subtitle={t('gerer_mon_compte')}>
       <div className="flex flex-col gap-4 max-w-2xl">
 
         {/* Informations utilisateur */}

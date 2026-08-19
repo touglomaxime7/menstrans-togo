@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import ComboBox from '../../components/ComboBox';
 import api from '../../api/axios';
@@ -41,6 +42,7 @@ const PAYS_LIVRAISON = ['Ghana', 'Bénin', 'Burkina Faso', 'Niger', 'Mali', 'Nig
   'Côte d\'Ivoire', 'Sénégal', 'Cameroun', 'Autre'];
 
 export default function Logistique() {
+  const { t } = useLanguage();
   const [missions,   setMissions]   = useState([]);
   const [livraisons, setLivraisons] = useState([]);
   const [camions,    setCamions]    = useState([]);
@@ -218,7 +220,7 @@ export default function Logistique() {
   };
 
   return (
-    <Layout title="Service Logistique" subtitle="Gestion des missions et livraisons">
+    <Layout title={t('logistique_titre')} subtitle={t('logistique_soustitre')}>
       <div className="flex flex-col gap-4">
 
         {/* Tableau de bord */}

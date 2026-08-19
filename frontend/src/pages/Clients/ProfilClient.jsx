@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { getClient, getDossiersClient, getHistoriqueClient } from '../../api/dossiers';
 import { toast } from 'react-toastify';
 
@@ -36,6 +37,7 @@ const TYPE_EVENEMENT_COLOR = {
 };
 
 export default function ProfilClient() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const [client,     setClient]     = useState(null);
@@ -64,7 +66,7 @@ export default function ProfilClient() {
 
   if (loading) {
     return (
-      <Layout title="Profil client" subtitle="Chargement...">
+      <Layout title={t('profil_client')} subtitle={t('chargement')}>
         <div className="text-center text-gray-400 py-16">Chargement...</div>
       </Layout>
     );
@@ -72,7 +74,7 @@ export default function ProfilClient() {
 
   if (!client) {
     return (
-      <Layout title="Profil client" subtitle="Introuvable">
+      <Layout title={t('profil_client')} subtitle={t('introuvable')}>
         <div className="text-center text-gray-400 py-16">Client introuvable</div>
       </Layout>
     );
@@ -82,7 +84,7 @@ export default function ProfilClient() {
   const dossiersClotures = dossiers.filter(d => d.statut === 'cloture' || d.statut === 'archive');
 
   return (
-    <Layout title={client.nom} subtitle="Profil client">
+    <Layout title={client.nom} subtitle={t('profil_client')}>
       <div className="flex flex-col gap-4">
 
         {/* Bouton retour */}

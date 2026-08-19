@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
 export default function CarteCamions() {
+  const { t } = useLanguage();
   const [camions, setCamions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCamion, setSelectedCamion] = useState(null);
@@ -54,7 +56,7 @@ export default function CarteCamions() {
   };
 
   return (
-    <Layout title="Carte des Camions" subtitle="Suivi GPS en temps réel">
+    <Layout title={t('carte_camions_titre')} subtitle={t('suivi_gps_temps_reel')}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}

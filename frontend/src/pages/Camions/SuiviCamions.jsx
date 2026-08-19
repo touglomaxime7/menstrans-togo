@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ const BADGE_STATUT = {
 };
 
 export default function SuiviCamions() {
+  const { t } = useLanguage();
   const [camions,    setCamions]    = useState([]);
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -122,7 +124,7 @@ export default function SuiviCamions() {
   );
 
   return (
-    <Layout title="Suivi des Camions" subtitle="Position et mission en temps réel">
+    <Layout title={t('suivi_camions_titre')} subtitle={t('position_mission_temps_reel')}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}

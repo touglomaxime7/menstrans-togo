@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { getDossiers, getRecapitulatif } from '../../api/dossiers';
 import { toast } from 'react-toastify';
 
@@ -36,6 +37,7 @@ const TYPE_COLOR = {
 };
 
 export default function Historique() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -83,7 +85,7 @@ export default function Historique() {
   });
 
   return (
-    <Layout title="Historique des dossiers" subtitle="Vue directeur — Suivi complet">
+    <Layout title={t('historique_titre')} subtitle={t('vue_directeur_suivi')}>
       <div className="flex gap-4 h-full">
 
         {/* Colonne gauche — Liste des dossiers */}

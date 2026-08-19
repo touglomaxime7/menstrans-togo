@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -27,6 +28,7 @@ const ROLES = [
 ];
 
 export default function Utilisateurs() {
+  const { t } = useLanguage();
   const [users,     setUsers]     = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -126,7 +128,7 @@ export default function Utilisateurs() {
   const initiales = (u) => `${u.prenom?.[0] || ''}${u.nom?.[0] || ''}`.toUpperCase();
 
   return (
-    <Layout title="Gestion des Utilisateurs" subtitle={`${users.length} comptes`}>
+    <Layout title={t('utilisateurs_titre')} subtitle={`${users.length} ${t('comptes_suffix')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Toolbar */}

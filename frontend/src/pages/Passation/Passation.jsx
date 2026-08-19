@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
@@ -11,6 +12,7 @@ const BADGE = {
 };
 
 export default function Passation() {
+  const { t } = useLanguage();
   const [passations, setPassations] = useState([]);
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -84,7 +86,7 @@ export default function Passation() {
   };
 
   return (
-    <Layout title="Service Passation" subtitle="Validation physique et montage des dossiers">
+    <Layout title={t('passation_titre')} subtitle={t('passation_soustitre')}>
       <div className="flex flex-col gap-4">
         {/* Tableau de bord */}
         <TableauBordSection statuts={['passation']} titre="Passation" />

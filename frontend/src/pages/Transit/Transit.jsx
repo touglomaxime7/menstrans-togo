@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
@@ -12,6 +13,7 @@ const BADGE_STATUT = {
 };
 
 export default function Transit() {
+  const { t } = useLanguage();
   const [declarations, setDeclarations] = useState([]);
   const [etudes,       setEtudes]       = useState([]);
   const [loading,      setLoading]      = useState(true);
@@ -140,7 +142,7 @@ export default function Transit() {
   };
 
   return (
-    <Layout title="Service Transit" subtitle="Déclarations douanières et études de valeur">
+    <Layout title={t('transit_titre')} subtitle={t('transit_soustitre')}>
       <div className="flex flex-col gap-4">
           {/* Tableau de bord */}
         <TableauBordSection statuts={['transit']} titre="Transit" />

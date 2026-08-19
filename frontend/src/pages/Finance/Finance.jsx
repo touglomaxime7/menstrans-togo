@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import ComboBox from '../../components/ComboBox';
 import api from '../../api/axios';
@@ -33,6 +34,7 @@ const STATUTS_PAIEMENT = ['Payé', 'En attente'];
 const STATUTS_PAIEMENT_MAP = { 'Payé': 'paye', 'En attente': 'en_attente' };
 
 export default function Finance() {
+  const { t } = useLanguage();
   const [montants,      setMontants]      = useState([]);
   const [factures,      setFactures]      = useState([]);
   const [bilan,         setBilan]         = useState(null);
@@ -138,7 +140,7 @@ export default function Finance() {
   const montantTTC = parseFloat(factForm.montant_ht || 0) * (1 + parseFloat(factForm.tva || 0) / 100);
 
   return (
-    <Layout title="Caisse & Comptabilité" subtitle="Gestion des montants et factures">
+    <Layout title={t('finance_titre')} subtitle={t('finance_soustitre')}>
       <div className="flex flex-col gap-4">
 
         {/* Tableau de bord */}

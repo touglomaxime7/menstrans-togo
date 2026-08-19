@@ -6,6 +6,7 @@ import RecapitulatifDossier from './RecapitulatifDossier';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const BADGE = {
   nouveau:            'bg-purple-100 text-purple-800',
@@ -57,6 +58,7 @@ const WORKFLOW_INFIRMER = {
 };
 
 export default function DetailDossier() {
+  const { t } = useLanguage();
   const { id }          = useParams();
   const navigate        = useNavigate();
   const { utilisateur } = useAuth();
@@ -172,8 +174,8 @@ const handleEnvoyerEtapeSuivante = async () => {
     WORKFLOW_INFIRMER[dossier.statut].roles.includes(utilisateur.role);
 
   if (loading) return (
-    <Layout title="Chargement...">
-      <div className="flex items-center justify-center h-40 text-gray-400 text-sm">Chargement...</div>
+    <Layout title={t('chargement')}>
+      <div className="flex items-center justify-center h-40 text-gray-400 text-sm">{t('chargement')}</div>
     </Layout>
   );
   if (!dossier) return null;
@@ -182,7 +184,7 @@ const handleEnvoyerEtapeSuivante = async () => {
   const conteneur   = dossier.conteneur;
 
   return (
-    <Layout title={`Dossier ${dossier.numero_dossier}`}
+    <Layout title={`${t('numero_dossier').replace('N° ', '')} ${dossier.numero_dossier}`}
       subtitle={`${dossier.client_nom} · ${dossier.type_transport}`}>
       <div className="flex flex-col gap-4">
 

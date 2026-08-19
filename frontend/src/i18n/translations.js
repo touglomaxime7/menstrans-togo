@@ -74,6 +74,117 @@ export const translations = {
     titre_logistique: 'Tableau de bord - Service Logistique',
     titre_caisse: 'Tableau de bord - Service Caisse',
     titre_comptabilite: 'Tableau de bord - Comptabilité',
+
+    // Commun / réutilisable dans toutes les pages
+    chargement: 'Chargement...',
+    rechercher: 'Rechercher',
+    nouveau: 'Nouveau',
+    nouvelle: 'Nouvelle',
+    ajouter: 'Ajouter',
+    modifier: 'Modifier',
+    supprimer: 'Supprimer',
+    fermer: 'Fermer',
+    enregistrer: 'Enregistrer',
+    annuler: 'Annuler',
+    envoyer: 'Envoyer',
+    valider: 'Valider',
+    voir: 'Voir',
+    telecharger: 'Télécharger',
+    statut_label: 'Statut',
+    actions_label: 'Actions',
+    aucun_resultat_trouve: 'Aucun résultat trouvé',
+    aucune_donnee: 'Aucune donnée pour le moment',
+    total: 'Total',
+    nom: 'Nom',
+    prenom: 'Prénom',
+    email: 'Email',
+    telephone: 'Téléphone',
+    role: 'Rôle',
+    numero_dossier: 'N° Dossier',
+
+    // Contrats
+    contrats_titre: 'Contrats',
+    contrats_soustitre: 'Gestion des contrats client-direction',
+    nouveau_contrat: '+ Nouveau contrat',
+    rechercher_contrat: 'Rechercher par n° contrat, dossier ou client...',
+    aucun_contrat: 'Aucun contrat trouvé',
+
+    // Clients
+    clients_titre: 'Clients',
+    clients_soustitre: 'Répertoire des clients',
+    nouveau_client: '+ Nouveau client',
+    rechercher_client: 'Rechercher un client...',
+    aucun_client: 'Aucun client trouvé',
+
+    // Dossiers
+    dossiers_titre: 'Dossiers',
+    dossiers_soustitre: 'Gestion des dossiers de transit',
+    nouveau_dossier: '+ Nouveau dossier',
+    rechercher_dossier: 'Rechercher un dossier...',
+    aucun_dossier: 'Aucun dossier trouvé',
+
+    // Documents
+    documents_titre: 'Documents',
+    documents_soustitre: 'Gestion documentaire',
+
+    // Finance
+    finance_titre: 'Caisse & Comptabilité',
+    finance_soustitre: 'Gestion des montants et factures',
+
+    // Utilisateurs
+    utilisateurs_titre: 'Utilisateurs',
+    utilisateurs_soustitre: 'Gestion des comptes et des rôles',
+    nouvel_utilisateur: '+ Nouvel utilisateur',
+
+    // Mon profil
+    mon_profil_titre: 'Mon Profil',
+    mon_profil_soustitre: 'Informations de votre compte',
+
+    // Transit / Passation / Logistique
+    transit_titre: 'Service Transit',
+    passation_titre: 'Service Passation',
+    logistique_titre: 'Service Logistique',
+
+    // Camions
+    camions_titre: 'Camions',
+    suivi_camions_titre: 'Suivi des Camions',
+    carte_camions_titre: 'Carte GPS',
+
+    // Archives
+    archives_titre: 'Archives',
+    archives_soustitre: 'Dossiers archivés',
+
+    // Historique / Études
+    historique_titre: 'Historique des dossiers',
+    etudes_titre: 'Études (Direction)',
+    total_recettes: 'Total recettes',
+    total_debours: 'Total débours',
+    solde_journalier: 'Solde journalier',
+    detail_operations: 'Détail',
+    operation: 'opération',
+    aucune_operation: 'Aucune opération enregistrée pour cette date',
+    conteneur: 'Conteneur',
+    classification: 'Classification',
+    mode_sortie: 'Mode sortie',
+    date_debut: 'Date début',
+    clients_enregistres: 'clients enregistrés',
+    ville: 'Ville',
+    pays: 'Pays',
+    documents_suffix: 'documents',
+    comptes_suffix: 'comptes',
+    gerer_mon_compte: 'Gérer mon compte et mon mot de passe',
+    transit_soustitre: 'Déclarations douanières et études de valeur',
+    passation_soustitre: 'Validation physique et montage des dossiers',
+    logistique_soustitre: 'Gestion des missions et livraisons',
+    camions_dans_parc: 'camions dans le parc',
+    suivi_gps_temps_reel: 'Suivi GPS en temps réel',
+    position_mission_temps_reel: 'Position et mission en temps réel',
+    dossiers_archives_suffix: 'dossiers archivés',
+    vue_directeur_suivi: 'Vue directeur — Suivi complet',
+    etudes_direction_titre: 'Direction — Études de valeur',
+    etudes_direction_soustitre: 'Complément des frais confidentiels',
+    profil_client: 'Profil client',
+    introuvable: 'Introuvable',
   },
   en: {
     // Sidebar - menu
@@ -150,5 +261,116 @@ export const translations = {
     titre_logistique: 'Dashboard - Logistics Department',
     titre_caisse: 'Dashboard - Cashier Department',
     titre_comptabilite: 'Dashboard - Accounting',
+
+    // Common / reused across all pages
+    chargement: 'Loading...',
+    rechercher: 'Search',
+    nouveau: 'New',
+    nouvelle: 'New',
+    ajouter: 'Add',
+    modifier: 'Edit',
+    supprimer: 'Delete',
+    fermer: 'Close',
+    enregistrer: 'Save',
+    annuler: 'Cancel',
+    envoyer: 'Send',
+    valider: 'Validate',
+    voir: 'View',
+    telecharger: 'Download',
+    statut_label: 'Status',
+    actions_label: 'Actions',
+    aucun_resultat_trouve: 'No results found',
+    aucune_donnee: 'No data yet',
+    total: 'Total',
+    nom: 'Last name',
+    prenom: 'First name',
+    email: 'Email',
+    telephone: 'Phone',
+    role: 'Role',
+    numero_dossier: 'File No.',
+
+    // Contracts
+    contrats_titre: 'Contracts',
+    contrats_soustitre: 'Client-management contract handling',
+    nouveau_contrat: '+ New contract',
+    rechercher_contrat: 'Search by contract, file or client number...',
+    aucun_contrat: 'No contract found',
+
+    // Clients
+    clients_titre: 'Clients',
+    clients_soustitre: 'Client directory',
+    nouveau_client: '+ New client',
+    rechercher_client: 'Search a client...',
+    aucun_client: 'No client found',
+
+    // Files
+    dossiers_titre: 'Files',
+    dossiers_soustitre: 'Transit file management',
+    nouveau_dossier: '+ New file',
+    rechercher_dossier: 'Search a file...',
+    aucun_dossier: 'No file found',
+
+    // Documents
+    documents_titre: 'Documents',
+    documents_soustitre: 'Document management',
+
+    // Finance
+    finance_titre: 'Cashier & Accounting',
+    finance_soustitre: 'Manage amounts and invoices',
+
+    // Users
+    utilisateurs_titre: 'Users',
+    utilisateurs_soustitre: 'Manage accounts and roles',
+    nouvel_utilisateur: '+ New user',
+
+    // My profile
+    mon_profil_titre: 'My Profile',
+    mon_profil_soustitre: 'Your account information',
+
+    // Transit / Handover / Logistics
+    transit_titre: 'Transit Department',
+    passation_titre: 'Handover Department',
+    logistique_titre: 'Logistics Department',
+
+    // Trucks
+    camions_titre: 'Trucks',
+    suivi_camions_titre: 'Truck Tracking',
+    carte_camions_titre: 'GPS Map',
+
+    // Archives
+    archives_titre: 'Archives',
+    archives_soustitre: 'Archived files',
+
+    // History / Studies
+    historique_titre: 'Files history',
+    etudes_titre: 'Studies (Management)',
+    total_recettes: 'Total revenue',
+    total_debours: 'Total expenses',
+    solde_journalier: 'Daily balance',
+    detail_operations: 'Detail',
+    operation: 'operation',
+    aucune_operation: 'No operation recorded for this date',
+    conteneur: 'Container',
+    classification: 'Classification',
+    mode_sortie: 'Exit mode',
+    date_debut: 'Start date',
+    clients_enregistres: 'registered clients',
+    ville: 'City',
+    pays: 'Country',
+    documents_suffix: 'documents',
+    comptes_suffix: 'accounts',
+    gerer_mon_compte: 'Manage my account and password',
+    transit_soustitre: 'Customs declarations and value studies',
+    passation_soustitre: 'Physical validation and file assembly',
+    logistique_soustitre: 'Missions and deliveries management',
+    camions_dans_parc: 'trucks in the fleet',
+    suivi_gps_temps_reel: 'Real-time GPS tracking',
+    position_mission_temps_reel: 'Real-time position and mission',
+    dossiers_archives_suffix: 'archived files',
+    vue_directeur_suivi: 'Management view — Full tracking',
+    etudes_direction_titre: 'Management — Value Studies',
+    etudes_direction_soustitre: 'Confidential fees supplement',
+    profil_client: 'Client profile',
+    introuvable: 'Not found',
   },
 };

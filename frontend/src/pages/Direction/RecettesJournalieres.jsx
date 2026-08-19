@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getRecettesJournalieres } from '../../api/contrats';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 function formatFCFA(n) {
   return new Intl.NumberFormat('fr-TG', {
@@ -14,6 +15,7 @@ function formatFCFA(n) {
 const today = () => new Date().toISOString().split('T')[0];
 
 export default function RecettesJournalieres() {
+  const { t } = useLanguage();
   const [date, setDate]       = useState(today());
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function RecettesJournalieres() {
   const soldeColor = (n) => n >= 0 ? 'text-green-600' : 'text-red-600';
 
   return (
-    <Layout title="Recettes journalières" subtitle="Tableau de bord — Direction">
+    <Layout title={t('nav_recettes')} subtitle={t('titre_direction')}>
     <div className="max-w-5xl mx-auto">
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mb-6">
@@ -55,15 +57,15 @@ export default function RecettesJournalieres() {
           {/* Cartes résumé */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Total recettes</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('total_recettes')}</p>
               <p className="text-2xl font-bold text-green-600">{formatFCFA(data.total_recettes)}</p>
             </div>
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Total débours</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('total_debours')}</p>
               <p className="text-2xl font-bold text-red-500">{formatFCFA(data.total_debours)}</p>
             </div>
             <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Solde journalier</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('solde_journalier')}</p>
               <p className={`text-2xl font-bold ${soldeColor(data.solde_journalier)}`}>
                 {formatFCFA(data.solde_journalier)}
               </p>
@@ -73,14 +75,14 @@ export default function RecettesJournalieres() {
           {/* Sous-titre */}
           <div className="mb-3">
             <h2 className="text-base font-semibold text-gray-700">
-              Détail — {data.nb_operations} opération{data.nb_operations !== 1 ? 's' : ''}
+              {t('detail_operations')} — {data.nb_operations} {t('operation')}{data.nb_operations !== 1 ? 's' : ''}
             </h2>
           </div>
 
           {/* Tableau détail */}
           {data.detail.length === 0 ? (
             <div className="text-center text-gray-400 py-10 bg-white rounded-xl border border-gray-200">
-              Aucune opération enregistrée pour cette date
+              {t('aucune_operation')}
             </div>
           ) : (
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">

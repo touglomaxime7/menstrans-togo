@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
@@ -48,6 +49,7 @@ const WORKFLOW = {
 };
 
 export default function Documents() {
+  const { t } = useLanguage();
   const { utilisateur } = useAuth();
   const [documents,      setDocuments]      = useState([]);
   const [dossiers,       setDossiers]       = useState([]);
@@ -299,7 +301,7 @@ export default function Documents() {
   const dossierOptions = dossiers.map(d => `${d.numero_dossier} — ${d.client_nom}`);
 
   return (
-    <Layout title="Gestion Documentaire" subtitle={`${documents.length} documents`}>
+    <Layout title={t('documents_titre')} subtitle={`${documents.length} ${t('documents_suffix')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}

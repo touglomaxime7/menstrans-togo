@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ const BADGE_STATUT = {
 };
 
 export default function Camions() {
+  const { t } = useLanguage();
   const [camions,    setCamions]    = useState([]);
   const [chauffeurs, setChauffeurs] = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -125,7 +127,7 @@ export default function Camions() {
   };
 
   return (
-    <Layout title="Gestion des Camions" subtitle={`${stats.total} camions dans le parc`}>
+    <Layout title={t('camions_titre')} subtitle={`${stats.total} ${t('camions_dans_parc')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}

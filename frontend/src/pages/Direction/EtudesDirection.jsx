@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
 export default function EtudesDirection() {
+  const { t } = useLanguage();
   const [etudes,    setEtudes]    = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -87,8 +89,8 @@ export default function EtudesDirection() {
 
   return (
     <Layout
-      title="Direction — Études de valeur"
-      subtitle="Complément des frais confidentiels"
+      title={t('etudes_direction_titre')}
+      subtitle={t('etudes_direction_soustitre')}
     >
       <div className="flex flex-col gap-4">
 

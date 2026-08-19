@@ -5,6 +5,7 @@ import { getDossiers, getClients, createDossier, createClient } from '../../api/
 import { createConteneur } from '../../api/contrats';
 import ComboBox from '../../components/ComboBox';
 import { toast } from 'react-toastify';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const BADGE = {
   nouveau:            'bg-purple-100 text-purple-800',
@@ -63,6 +64,7 @@ const MODES_SORTIE = [
 const CLASSIFICATIONS = ['Standard', 'Urgent', 'VIP', 'Contentieux'];
 
 export default function ListeDossiers() {
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [dossiers,        setDossiers]        = useState([]);
   const [clients,         setClients]         = useState([]);
@@ -251,7 +253,7 @@ export default function ListeDossiers() {
   }
 
   return (
-    <Layout title="Gestion des Dossiers" subtitle={`${dossiers.length} dossiers au total`}>
+    <Layout title={t('dossiers_titre')} subtitle={`${dossiers.length} ${t('dossiers_titre').toLowerCase()} ${lang === 'en' ? 'total' : 'au total'}`}>
       <div className="flex flex-col gap-3">
 
         {/* Toolbar */}
@@ -260,7 +262,7 @@ export default function ListeDossiers() {
             <div className="relative">
               <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
               <input value={search} onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher un dossier, client..."
+                placeholder={t('rechercher_dossier')}
                 className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-52 focus:border-blue-400"/>
             </div>
             <select value={transport} onChange={(e) => setTransport(e.target.value)}
@@ -284,7 +286,7 @@ export default function ListeDossiers() {
               className="h-8 border border-gray-200 rounded-md text-xs px-2 outline-none"/>
             <button type="submit"
               className="h-8 px-3 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-              Rechercher
+              {t('rechercher')}
             </button>
             <button type="button"
               onClick={() => { setSearch(''); setTransport(''); setClassification(''); setDateDebut(''); setDateFin(''); setStatut(''); setActiveTab(''); }}
@@ -294,7 +296,7 @@ export default function ListeDossiers() {
           </form>
           <button onClick={() => { resetModal(); setShowModal(true); }}
             className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouveau dossier
+            {t('nouveau_dossier')}
           </button>
         </div>
 
@@ -317,23 +319,23 @@ export default function ListeDossiers() {
             <span className="text-[10px] text-gray-400">{filtered.length} dossier{filtered.length > 1 ? 's' : ''}</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun dossier trouvé</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_dossier')}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Conteneur</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Classification</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mode sortie</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date début</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('numero_dossier')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('client')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('type')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('conteneur')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('classification')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('mode_sortie')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_label')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_debut')}</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -386,7 +388,7 @@ export default function ListeDossiers() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[560px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
-              <span className="text-sm font-medium text-gray-800">Nouveau dossier</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouveau_dossier')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <form onSubmit={handleCreateDossier} className="p-5 flex flex-col gap-4">

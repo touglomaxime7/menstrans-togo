@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
 export default function Archives() {
+  const { t } = useLanguage();
   const [archives,  setArchives]  = useState([]);
   const [dossiers,  setDossiers]  = useState([]);
   const [loading,   setLoading]   = useState(true);
@@ -52,7 +54,7 @@ export default function Archives() {
   );
 
   return (
-    <Layout title="Archives" subtitle={`${archives.length} dossiers archivés`}>
+    <Layout title={t('archives_titre')} subtitle={`${archives.length} ${t('dossiers_archives_suffix')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}

@@ -5,8 +5,10 @@ import { getClients, createClient } from '../../api/dossiers';
 import { PAYS_DATA, getPaysParNom } from '../../data/paysData';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function Clients() {
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [clients,   setClients]   = useState([]);
   const [loading,   setLoading]   = useState(true);
@@ -141,7 +143,7 @@ export default function Clients() {
   const emailValide = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
 
   return (
-    <Layout title="Gestion des Clients" subtitle={`${clients.length} clients enregistrés`}>
+    <Layout title={t('clients_titre')} subtitle={`${clients.length} ${t('clients_enregistres')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}
@@ -164,12 +166,12 @@ export default function Clients() {
           <div className="relative">
             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
             <input value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher par nom, email, téléphone ou ville..."
+              placeholder={t('rechercher_client')}
               className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-96 focus:border-blue-400"/>
           </div>
           <button onClick={ouvrirNouveau}
             className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouveau client
+            {t('nouveau_client')}
           </button>
         </div>
 
@@ -180,19 +182,19 @@ export default function Clients() {
             <span className="text-[10px] text-gray-400">{filtered.length} client(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun client trouvé</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_client')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Nom</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Téléphone</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Email</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Ville</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Pays</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('nom')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('telephone')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('email')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('ville')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('pays')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -248,7 +250,7 @@ export default function Clients() {
           <div className="bg-white rounded-xl w-[550px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
-                {selected ? 'Modifier le client' : 'Nouveau client'}
+                {selected ? `${t('modifier')} - ${t('clients_titre')}` : t('nouveau_client')}
               </span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>

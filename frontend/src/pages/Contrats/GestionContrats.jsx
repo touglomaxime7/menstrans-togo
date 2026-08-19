@@ -7,6 +7,7 @@ import {
 import { getDossiers } from '../../api/dossiers';
 import ComboBox from '../../components/ComboBox';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const PIECES_LABELS = {
   certificat_origine:  "Certificat d'origine",
@@ -106,6 +107,7 @@ function SignatureCanvas({ onSave, onCancel, label }) {
 
 // ── Page principale ────────────────────────────────────────────────────────────
 export default function GestionContrats() {
+  const { t } = useLanguage();
   const [contrats, setContrats]     = useState([]);
   const [dossiers, setDossiers]     = useState([]);
   const [loading,  setLoading]      = useState(true);
@@ -270,19 +272,19 @@ export default function GestionContrats() {
   const dossierOptions = dossiers.map(d => `${d.numero_dossier} — ${d.client_nom}`);
 
   return (
-    <Layout title="Contrats" subtitle="Gestion des contrats client-direction">
+    <Layout title={t('contrats_titre')} subtitle={t('contrats_soustitre')}>
     <div className="max-w-6xl mx-auto">
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mb-6">
         <button onClick={() => setShowForm(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition btn-hover">
-          + Nouveau contrat
+          {t('nouveau_contrat')}
         </button>
       </div>
 
       {/* Recherche */}
       <div className="mb-4">
-        <input type="text" placeholder="Rechercher par n° contrat, dossier ou client..."
+        <input type="text" placeholder={t('rechercher_contrat')}
           value={search} onChange={e => setSearch(e.target.value)}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"/>
       </div>
@@ -600,9 +602,9 @@ export default function GestionContrats() {
 
       {/* Liste des contrats */}
       {loading ? (
-        <div className="text-center text-gray-500 py-12">Chargement...</div>
+        <div className="text-center text-gray-500 py-12">{t('chargement')}</div>
       ) : contrats.length === 0 ? (
-        <div className="text-center text-gray-400 py-12">Aucun contrat trouvé</div>
+        <div className="text-center text-gray-400 py-12">{t('aucun_contrat')}</div>
       ) : (
         <div className="space-y-3">
           {contrats.map(c => (
