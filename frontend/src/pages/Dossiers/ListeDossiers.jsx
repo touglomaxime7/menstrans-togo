@@ -25,7 +25,7 @@ const CLASSIF_BADGE = {
 };
 
 const CLASSIF_LABEL = {
-  standard: 'Standard', urgent: 'Urgent', vip: 'VIP', contentieux: 'Contentieux',
+  standard: 'État', urgent: 'Urgent', vip: 'VIP', contentieux: 'Contentieux',
 };
 
 const TABS = [
@@ -57,10 +57,10 @@ const PAYS_PORTS = [
 ];
 
 const MODES_SORTIE = [
-  'Camion', 'Dépotage', 'Terminal PIA', 'Terminal Togo', 'Terminal BMH', 'Autre terminal',
+  'Terminal PIA', 'Terminal Togo', 'Terminal BMH', 'Autre terminal',
 ];
 
-const CLASSIFICATIONS = ['Standard', 'Urgent', 'VIP', 'Contentieux'];
+const CLASSIFICATIONS = ['État', 'Urgent', 'VIP', 'Contentieux'];
 
 export default function ListeDossiers() {
   const navigate = useNavigate();
@@ -89,6 +89,7 @@ export default function ListeDossiers() {
     nombre_conteneurs: 1,
     type_marchandise:  '',
     numero_bl:         '',
+    numero_conteneur:  '',
     port_chargement:   '',
     port_dechargement: 'Lomé (Togo)',
     compagnie_maritime:'',
@@ -147,25 +148,25 @@ export default function ListeDossiers() {
     setForm({ client: '', type_transport: '', observations: '', classification: 'standard', mode_sortie: '' });
     setConteneurForm({
       type_conteneur: "20' Standard", nombre_conteneurs: 1, type_marchandise: '',
-      numero_bl: '', port_chargement: '', port_dechargement: 'Lomé (Togo)',
+      numero_bl: '', numero_conteneur: '', port_chargement: '',
+      port_dechargement: 'Lomé (Togo)',
       compagnie_maritime: '', poids_total_kg: '', observations: '',
     });
     setClientSearch('');
     setClientSuggestions([]);
   };
 
- const handleCreateDossier = async (e) => {
+  const handleCreateDossier = async (e) => {
     e.preventDefault();
     if (!form.client || !form.type_transport) {
       toast.error('Veuillez remplir les champs obligatoires');
       return;
     }
 
-    // Convertir les labels en valeurs backend
     const typeTransportMap = {
-      'maritime': 'maritime', 'Maritime': 'maritime', '🚢 Maritime': 'maritime',
-      'aerien': 'aerien', 'Aérien': 'aerien', '✈️ Aérien': 'aerien',
-      'terrestre': 'terrestre', 'Terrestre': 'terrestre', '🚛 Terrestre': 'terrestre',
+      'maritime': 'maritime', 'Maritime': 'maritime',
+      'aerien': 'aerien', 'Aérien': 'aerien',
+      'terrestre': 'terrestre', 'Terrestre': 'terrestre',
     };
     const classifMap = {
       'standard': 'standard', 'Standard': 'standard',
@@ -174,8 +175,6 @@ export default function ListeDossiers() {
       'contentieux': 'contentieux', 'Contentieux': 'contentieux',
     };
     const modeSortieMap = {
-      'Camion': 'camion', 'camion': 'camion',
-      'Dépotage': 'depotage', 'depotage': 'depotage',
       'Terminal PIA': 'terminal_pia', 'terminal_pia': 'terminal_pia',
       'Terminal Togo': 'terminal_togo', 'terminal_togo': 'terminal_togo',
       'Terminal BMH': 'terminal_bmh', 'terminal_bmh': 'terminal_bmh',
@@ -203,6 +202,7 @@ export default function ListeDossiers() {
             nombre_conteneurs: parseInt(conteneurForm.nombre_conteneurs) || 1,
             type_marchandise:  conteneurForm.type_marchandise,
             numero_bl:         conteneurForm.numero_bl,
+            numero_conteneur:  conteneurForm.numero_conteneur,
             port_chargement:   conteneurForm.port_chargement,
             port_dechargement: conteneurForm.port_dechargement,
             compagnie_maritime:conteneurForm.compagnie_maritime,
@@ -273,7 +273,7 @@ export default function ListeDossiers() {
             <select value={classification} onChange={(e) => setClassification(e.target.value)}
               className="h-8 border border-gray-200 rounded-md text-xs px-2 outline-none">
               <option value="">Toutes classifications</option>
-              <option value="standard">Standard</option>
+              <option value="standard">État</option>
               <option value="urgent">Urgent</option>
               <option value="vip">VIP</option>
               <option value="contentieux">Contentieux</option>
@@ -329,6 +329,7 @@ export default function ListeDossiers() {
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Conteneur</th>
+                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Conteneur</th>
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Classification</th>
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mode sortie</th>
                     <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
@@ -351,6 +352,9 @@ export default function ListeDossiers() {
                             {d.conteneur.nombre_conteneurs}x {d.conteneur.type_conteneur_label}
                           </span>
                         ) : '—'}
+                      </td>
+                      <td className="px-3 py-2 text-gray-500 font-mono text-[10px]">
+                        {d.conteneur?.numero_conteneur || '—'}
                       </td>
                       <td className="px-3 py-2">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${CLASSIF_BADGE[d.classification] || 'bg-gray-100'}`}>
@@ -466,12 +470,22 @@ export default function ListeDossiers() {
                         placeholder="ex: Produits alimentaires, Électronique..."
                         className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none bg-white focus:border-blue-400"/>
                     </div>
+                    {/* N° B/L */}
                     <div className="flex flex-col gap-1">
                       <label className="text-[10px] font-medium text-gray-500 uppercase">N° B/L</label>
                       <input type="text"
                         value={conteneurForm.numero_bl}
                         onChange={(e) => setConteneurForm({ ...conteneurForm, numero_bl: e.target.value })}
                         placeholder="ex: MSCU1234567"
+                        className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none bg-white focus:border-blue-400"/>
+                    </div>
+                    {/* N° Conteneur */}
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[10px] font-medium text-gray-500 uppercase">N° Conteneur</label>
+                      <input type="text"
+                        value={conteneurForm.numero_conteneur}
+                        onChange={(e) => setConteneurForm({ ...conteneurForm, numero_conteneur: e.target.value })}
+                        placeholder="ex: MSCU1234567-8"
                         className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none bg-white focus:border-blue-400"/>
                     </div>
                     <div className="flex flex-col gap-1">
@@ -524,14 +538,14 @@ export default function ListeDossiers() {
                 />
               </div>
 
-              {/* Mode sortie */}
+              {/* Mode sortie — uniquement les terminaux */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-medium text-gray-500 uppercase">Mode de sortie</label>
+                <label className="text-[10px] font-medium text-gray-500 uppercase">Lieu de sortie</label>
                 <ComboBox
                   value={form.mode_sortie}
                   onChange={(val) => setForm({ ...form, mode_sortie: val })}
                   options={MODES_SORTIE}
-                  placeholder="À déterminer plus tard..."
+                  placeholder="Terminal PIA, Terminal Togo..."
                 />
               </div>
 

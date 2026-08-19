@@ -27,13 +27,13 @@ class ConteneurDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'dossier', 'type_conteneur', 'type_conteneur_label',
             'nombre_conteneurs', 'type_marchandise',
-            'poids_total_kg', 'volume_m3', 'numero_bl',
+            'poids_total_kg', 'volume_m3',
+            'numero_bl', 'numero_conteneur',
             'port_chargement', 'port_dechargement',
             'compagnie_maritime', 'observations',
             'cree_le', 'modifie_le',
         ]
         read_only_fields = ['dossier']
-
 
 # ── DOSSIER ────────────────────────────────────────────────────────────────────
 

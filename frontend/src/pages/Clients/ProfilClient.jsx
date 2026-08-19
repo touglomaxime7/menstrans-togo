@@ -23,7 +23,7 @@ const CLASSIF_BADGE = {
 };
 
 const CLASSIF_LABEL = {
-  standard: 'Standard', urgent: 'Urgent', vip: 'VIP', contentieux: 'Contentieux',
+  standard: 'État', urgent: 'Urgent', vip: 'VIP', contentieux: 'Contentieux',
 };
 
 const TYPE_EVENEMENT_COLOR = {

@@ -21,7 +21,7 @@ class Dossier(models.Model):
         ('archive',             'Archive'),
     ]
     CLASSIFICATION_CHOICES = [
-        ('standard',    'Standard'),
+        ('standard',    'État'),
         ('urgent',      'Urgent'),
         ('vip',         'VIP'),
         ('contentieux', 'Contentieux'),
@@ -125,6 +125,7 @@ class ConteneurDetail(models.Model):
     poids_total_kg     = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     volume_m3          = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     numero_bl          = models.CharField(max_length=50, blank=True, verbose_name="N° B/L")
+    numero_conteneur   = models.CharField(max_length=50, blank=True, verbose_name="N° Conteneur")
     port_chargement    = models.CharField(max_length=100, blank=True)
     port_dechargement  = models.CharField(max_length=100, blank=True)
     compagnie_maritime = models.CharField(max_length=100, blank=True)

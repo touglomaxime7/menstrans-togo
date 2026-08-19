@@ -26,6 +26,10 @@ const BADGE_DOC = {
   archive:       'bg-gray-100 text-gray-600',
 };
 
+const CLASSIF_LABEL = {
+  standard: 'État', urgent: 'Urgent', vip: 'VIP', contentieux: 'Contentieux',
+};
+
 const ETAPES = [
   { label: 'Ouverture',     value: 'nouveau' },
   { label: 'Transit',       value: 'transit' },
@@ -49,7 +53,7 @@ const WORKFLOW = {
   cloture:            { next: null,                 roles: [],                                              next_label: '' },
 };
 
-const WORKFLOW_INFIRMER = {
+const WORKFLOW_ANNULER = {
   logistique_initial: { precedent: 'transit',            roles: ['admin', 'direction', 'logistique'], precedent_label: 'Transit' },
   passation:          { precedent: 'logistique_initial', roles: ['admin', 'direction', 'passation'],  precedent_label: 'Logistique (phase initiale)' },
   logistique_final:   { precedent: 'passation',          roles: ['admin', 'direction', 'logistique'], precedent_label: 'Passation' },
@@ -82,7 +86,7 @@ export default function DetailDossier() {
 
   useEffect(() => { fetchDossier(); }, [id]);
 
-const handleEnvoyerEtapeSuivante = async () => {
+  const handleEnvoyerEtapeSuivante = async () => {
     const workflow = WORKFLOW[dossier?.statut];
     if (!workflow?.next) { toast.error('Dernière étape atteinte'); return; }
     if (!window.confirm(`Envoyer ce dossier au service ${workflow.next_label} ?`)) return;
@@ -115,12 +119,11 @@ const handleEnvoyerEtapeSuivante = async () => {
         toast.error(data?.error || "Erreur lors de l'envoi");
       }
     }
-  };   
-
+  };
 
   const handleAnnuler = async () => {
     const workflow = WORKFLOW_ANNULER[dossier?.statut];
-    if (!workflow) { toast.error("Impossible d'annuler"); return; }
+    if (!workflow) { toast.error("Impossible d'annuler ce dossier"); return; }
     const motif = prompt("Motif de l'annulation :");
     if (!motif) return;
     if (!window.confirm(`Renvoyer au service ${workflow.precedent_label} ?\nMotif: ${motif}`)) return;
@@ -128,11 +131,11 @@ const handleEnvoyerEtapeSuivante = async () => {
       const dateNow = new Date().toLocaleString('fr-FR');
       await api.post(`/dossiers/${id}/changer_statut/`, {
         statut: workflow.precedent,
-        commentaire: `[INFIRMÉ par ${utilisateur?.prenom} ${utilisateur?.nom} le ${dateNow}] ${motif}`,
+        commentaire: `[ANNULÉ par ${utilisateur?.prenom} ${utilisateur?.nom} le ${dateNow}] ${motif}`,
       });
       toast.success(`Annulation — Dossier renvoyé au service ${workflow.precedent_label}`);
       fetchDossier();
-    } catch { toast.error("Erreur lors de l'infirmation"); }
+    } catch { toast.error("Erreur lors de l'annulation"); }
   };
 
   const handleTelechargerDocument = async (doc) => {
@@ -167,9 +170,9 @@ const handleEnvoyerEtapeSuivante = async () => {
   const peutEnvoyer  = () => dossier && utilisateur &&
     WORKFLOW[dossier.statut]?.next &&
     WORKFLOW[dossier.statut].roles.includes(utilisateur.role);
-  const peutInfirmer = () => dossier && utilisateur &&
-    WORKFLOW_INFIRMER[dossier.statut] &&
-    WORKFLOW_INFIRMER[dossier.statut].roles.includes(utilisateur.role);
+  const peutAnnuler  = () => dossier && utilisateur &&
+    WORKFLOW_ANNULER[dossier.statut] &&
+    WORKFLOW_ANNULER[dossier.statut].roles.includes(utilisateur.role);
 
   if (loading) return (
     <Layout title="Chargement...">
@@ -201,10 +204,10 @@ const handleEnvoyerEtapeSuivante = async () => {
               className="h-9 px-4 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md text-sm font-medium hover:bg-indigo-100">
               ⏱ Récapitulatif
             </button>
-            {peutInfirmer() && (
-              <button onClick={handleInfirmer}
+            {peutAnnuler() && (
+              <button onClick={handleAnnuler}
                 className="h-9 px-4 bg-orange-600 text-white rounded-md text-sm font-medium hover:bg-orange-700">
-                ↩ Infirmer (→ {WORKFLOW_INFIRMER[dossier.statut]?.precedent_label})
+                ↩ Annulation (→ {WORKFLOW_ANNULER[dossier.statut]?.precedent_label})
               </button>
             )}
             {peutEnvoyer() && (
@@ -243,11 +246,11 @@ const handleEnvoyerEtapeSuivante = async () => {
           {/* Infos */}
           <div className="grid grid-cols-5 gap-3 mb-4">
             {[
-              { label: 'Date ouverture',   value: dossier.date_debut },
-              { label: 'Date clôture',     value: dossier.date_fin || '—' },
-              { label: 'Type transport',   value: dossier.type_transport },
-              { label: 'Classification',   value: dossier.classification || '—' },
-              { label: 'Mode sortie',      value: dossier.mode_sortie || '—' },
+              { label: 'Date ouverture', value: dossier.date_debut },
+              { label: 'Date clôture',  value: dossier.date_fin || '—' },
+              { label: 'Transport',     value: dossier.type_transport },
+              { label: 'Classification',value: CLASSIF_LABEL[dossier.classification] || dossier.classification || '—' },
+              { label: 'Lieu de sortie',value: dossier.mode_sortie?.replace(/_/g, ' ') || '—' },
             ].map((info) => (
               <div key={info.label} className="bg-gray-50 rounded-md p-3 border border-gray-100">
                 <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-1">{info.label}</div>
@@ -289,7 +292,7 @@ const handleEnvoyerEtapeSuivante = async () => {
           </div>
         </div>
 
-        {/* ── Carte Conteneur (maritime uniquement) ── */}
+        {/* Carte Conteneur */}
         {dossier.type_transport === 'maritime' && (
           <div className="bg-blue-50 rounded-lg border border-blue-200 overflow-hidden">
             <div className="px-4 py-2.5 border-b border-blue-200 flex items-center gap-2">
@@ -303,6 +306,7 @@ const handleEnvoyerEtapeSuivante = async () => {
                   { label: 'Nombre',            value: conteneur.nombre_conteneurs || '—' },
                   { label: 'Marchandise',       value: conteneur.type_marchandise || '—' },
                   { label: 'N° B/L',            value: conteneur.numero_bl || '—' },
+                  { label: 'N° Conteneur',      value: conteneur.numero_conteneur || '—' },
                   { label: 'Compagnie',         value: conteneur.compagnie_maritime || '—' },
                   { label: 'Port chargement',   value: conteneur.port_chargement || '—' },
                   { label: 'Port déchargement', value: conteneur.port_dechargement || '—' },
@@ -398,8 +402,8 @@ const handleEnvoyerEtapeSuivante = async () => {
                 { label: 'Nom',            value: dossier.client_nom },
                 { label: 'N° Dossier',     value: dossier.numero_dossier },
                 { label: 'Transport',      value: dossier.type_transport },
-                { label: 'Classification', value: dossier.classification },
-                { label: 'Mode sortie',    value: dossier.mode_sortie || '—' },
+                { label: 'Classification', value: CLASSIF_LABEL[dossier.classification] || dossier.classification },
+                { label: 'Lieu de sortie', value: dossier.mode_sortie?.replace(/_/g, ' ') || '—' },
                 { label: 'Créé par',       value: dossier.cree_par_nom },
               ].map((row) => (
                 <div key={row.label} className="flex justify-between py-1 border-b border-gray-50 text-xs">
