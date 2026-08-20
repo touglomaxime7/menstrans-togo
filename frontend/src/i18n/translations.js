@@ -339,6 +339,17 @@ export const translations = {
     localisation_temps_reel: 'Localisation en temps réel',
     chargement_carte: 'Chargement de la carte...',
     camions_geolocalises: 'camion(s) géolocalisé(s)',
+    // Archives
+    rechercher_archive: 'Rechercher par N° dossier ou référence...',
+    aucun_dossier_archive: 'Aucun dossier archivé',
+    date_archivage: 'Date archivage',
+    ref_physique: 'Réf. physique',
+    emplacement_numerique: 'Emplacement numérique',
+    archive_par: 'Archivé par',
+    ref_placeholder: 'ex: BOITE-2026-04-A1',
+    emplacement_placeholder: 'ex: /archives/2026/04/',
+    chargement_historique: "Chargement de l'historique...",
+    aucune_activite: 'Aucune activité enregistrée pour ce dossier',
   },
   en: {
     // Sidebar - menu
@@ -680,5 +691,16 @@ export const translations = {
     localisation_temps_reel: 'Real-time location',
     chargement_carte: 'Loading map...',
     camions_geolocalises: 'geolocated truck(s)',
+    // Archives
+    rechercher_archive: 'Rechercher par N° dossier ou référence...',
+    aucun_dossier_archive: 'Aucun dossier archivé',
+    date_archivage: 'Date archivage',
+    ref_physique: 'Réf. physique',
+    emplacement_numerique: 'Emplacement numérique',
+    archive_par: 'Archivé par',
+    ref_placeholder: 'ex: BOITE-2026-04-A1',
+    emplacement_placeholder: 'ex: /archives/2026/04/',
+    chargement_historique: 'Loading history...',
+    aucune_activite: 'No activity recorded for this file',
   },
 };

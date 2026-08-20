@@ -80,7 +80,7 @@ export default function Archives() {
           <div className="relative">
             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
             <input value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher par N° dossier ou référence..."
+              placeholder={t('rechercher_archive')}
               className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-64 focus:border-blue-400"/>
           </div>
           <button onClick={() => setShowModal(true)}
@@ -96,19 +96,19 @@ export default function Archives() {
             <span className="text-[10px] text-gray-400">{filtered.length} dossier(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun dossier archivé</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_dossier_archive')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Dossier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date archivage</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Réf. physique</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Emplacement numérique</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Archivé par</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('numero_dossier')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_archivage')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('ref_physique')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('emplacement_numerique')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('archive_par')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,14 +155,14 @@ export default function Archives() {
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Référence physique</label>
                 <input value={form.reference_physique}
                   onChange={(e) => setForm({...form, reference_physique: e.target.value})}
-                  placeholder="ex: BOITE-2026-04-A1"
+                  placeholder={t('ref_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Emplacement numérique</label>
                 <input value={form.emplacement_numerique}
                   onChange={(e) => setForm({...form, emplacement_numerique: e.target.value})}
-                  placeholder="ex: /archives/2026/04/"
+                  placeholder={t('emplacement_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="flex justify-end gap-2 pt-2">
