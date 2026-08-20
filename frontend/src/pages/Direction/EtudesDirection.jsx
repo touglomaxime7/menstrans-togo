@@ -104,22 +104,22 @@ export default function EtudesDirection() {
             <span className="text-[10px] text-gray-400">{etudes.length} étude(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : etudes.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucune étude de valeur</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucune_etude_valeur')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('dossier')}</th>
                   <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Transit</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Manutention</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Portuaires</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Autres</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Total</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">État</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('transit_titre')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('manutention')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('portuaires')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('autres')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('total')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('etat')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,7 +148,7 @@ export default function EtudesDirection() {
                       <td className="px-3 py-2">
                         <button onClick={() => ouvrirCompletement(e)}
                           className="h-6 px-2 bg-blue-50 text-blue-700 rounded text-[10px] border border-blue-200 hover:bg-blue-100">
-                          {complete ? 'Modifier' : 'Compléter'}
+                          {complete ? t('modifier_action') : t('completer')}
                         </button>
                       </td>
                     </tr>
@@ -167,26 +167,26 @@ export default function EtudesDirection() {
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
                 <div className="text-sm font-medium text-gray-800">
-                  Complément des frais — Dossier {etudeActive.dossier_numero || etudeActive.dossier}
+                  {t('complement_frais_dossier')} {etudeActive.dossier_numero || etudeActive.dossier}
                 </div>
                 <div className="text-[10px] text-gray-400 mt-0.5">
-                  DTD déjà saisi : {parseFloat(etudeActive.droit_taxe_douane).toLocaleString('fr-FR')} F
+                  {t('dtd_deja_saisi')} : {parseFloat(etudeActive.droit_taxe_douane).toLocaleString('fr-FR')} F
                 </div>
               </div>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <div className="px-5 pt-3">
               <div className="bg-blue-50 border border-blue-200 rounded-md p-2 text-[10px] text-blue-700">
-                ℹ️ Renseignez les frais confidentiels. Ces montants ne sont visibles que par la Direction.
+                ℹ️ {t('frais_confidentiels_info')}
               </div>
             </div>
             <form onSubmit={handleCompleter} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { key: 'frais_transit',     label: 'Frais transit (FCFA)' },
-                  { key: 'frais_manutention', label: 'Manutention (FCFA)' },
-                  { key: 'frais_portuaires',  label: 'Frais portuaires (FCFA)' },
-                  { key: 'autres_frais',      label: 'Autres frais (FCFA)' },
+                  { key: 'frais_transit',     label: t('frais_transit_fcfa') },
+                  { key: 'frais_manutention', label: t('manutention_fcfa') },
+                  { key: 'frais_portuaires',  label: t('frais_portuaires_fcfa') },
+                  { key: 'autres_frais',      label: t('autres_frais_fcfa') },
                 ].map((f) => (
                   <div key={f.key} className="flex flex-col gap-1">
                     <label className="text-[10px] font-medium text-gray-500 uppercase">
@@ -201,7 +201,7 @@ export default function EtudesDirection() {
 
               {/* Total calculé */}
               <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-center justify-between">
-                <span className="text-[11px] text-blue-700 font-medium">Total étude de valeur</span>
+                <span className="text-[11px] text-blue-700 font-medium">{t('total_etude_valeur')}</span>
                 <span className="text-base font-bold text-blue-800">
                   {totalSaisie.toLocaleString('fr-FR')} FCFA
                 </span>
@@ -209,10 +209,10 @@ export default function EtudesDirection() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
                 <button type="submit"
                   className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-                  Enregistrer
+                  {t('enregistrer')}
                 </button>
               </div>
             </form>

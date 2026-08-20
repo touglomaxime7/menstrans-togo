@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getRecapitulatif } from '../../api/dossiers';
 import { toast } from 'react-toastify';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const STATUT_COLORS = {
   nouveau:            'bg-purple-100 text-purple-700',
@@ -32,7 +33,7 @@ const TYPE_COLOR = {
   paiement:                'bg-emerald-100 text-emerald-600',
 };
 
-function DureeBar({ jours, max }) {
+function DureeBar({ jours, max, t }) {
   const pct = max > 0 ? Math.round((jours / max) * 100) : 0;
   return (
     <div className="flex items-center gap-2">
@@ -40,13 +41,14 @@ function DureeBar({ jours, max }) {
         <div className="h-2 rounded-full bg-blue-500 transition-all" style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-gray-500 w-16 text-right">
-        {jours} jour{jours > 1 ? 's' : ''}
+        {jours} {t('jour')}{jours > 1 ? 's' : ''}
       </span>
     </div>
   );
 }
 
 export default function RecapitulatifDossier({ dossierId, onClose }) {
+  const { t } = useLanguage();
   const [data,    setData]    = useState(null);
   const [loading, setLoading] = useState(true);
   const [onglet,  setOnglet]  = useState('durees');
@@ -68,7 +70,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl p-8 text-gray-400">Chargement...</div>
+        <div className="bg-white rounded-xl p-8 text-gray-400">{t('chargement')}</div>
       </div>
     );
   }
@@ -87,7 +89,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
         {/* Header */}
         <div className="sticky top-0 bg-white px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-gray-800">Récapitulatif — {data.dossier}</h2>
+            <h2 className="text-lg font-bold text-gray-800">{t('recapitulatif')} — {data.dossier}</h2>
             <p className="text-sm text-gray-500">{data.client}</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">✕</button>
@@ -99,27 +101,27 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
           <div className="grid grid-cols-3 gap-3 mb-5">
             <div className="bg-blue-50 rounded-xl p-3 border border-gray-200 text-center">
               <div className="text-2xl font-bold text-blue-600">{data.duree_totale_jours}</div>
-              <div className="text-[10px] text-gray-400 mt-0.5">Durée totale (jours)</div>
+              <div className="text-[10px] text-gray-400 mt-0.5">{t('duree_totale_jours')}</div>
             </div>
             <div className="bg-green-50 rounded-xl p-3 border border-gray-200 text-center">
               <div className="text-2xl font-bold text-green-600">{nbEtapes}</div>
-              <div className="text-[10px] text-gray-400 mt-0.5">Étapes franchies</div>
+              <div className="text-[10px] text-gray-400 mt-0.5">{t('etapes_franchies')}</div>
             </div>
             <div className="bg-purple-50 rounded-xl p-3 border border-gray-200 text-center">
               <div className="text-2xl font-bold text-purple-600">{data.nb_fichiers}</div>
-              <div className="text-[10px] text-gray-400 mt-0.5">Fichiers joints</div>
+              <div className="text-[10px] text-gray-400 mt-0.5">{t('fichiers_joints')}</div>
             </div>
           </div>
 
           {/* Statut actuel */}
           <div className="flex items-center gap-2 mb-5">
-            <span className="text-xs text-gray-500">Statut actuel :</span>
+            <span className="text-xs text-gray-500">{t('statut_actuel')} :</span>
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUT_COLORS[data.statut_actuel] || 'bg-gray-100'}`}>
               {data.statut_actuel}
             </span>
             {data.date_fin && (
               <span className="text-xs text-gray-400 ml-2">
-                Clôturé le {new Date(data.date_fin).toLocaleDateString('fr-TG')}
+                {t('cloture_le')} {new Date(data.date_fin).toLocaleDateString('fr-TG')}
               </span>
             )}
           </div>
@@ -127,9 +129,9 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
           {/* Onglets */}
           <div className="flex gap-1 bg-gray-100 rounded-lg p-1 mb-4">
             {[
-              { key: 'durees',     label: '⏱ Durées par utilisateur' },
-              { key: 'historique', label: `📋 Toute l'activité (${data.historique?.length || 0})` },
-              { key: 'fichiers',   label: `📎 Fichiers (${data.nb_fichiers})` },
+              { key: 'durees',     label: t('durees_par_utilisateur') },
+              { key: 'historique', label: `${t('toute_activite')} (${data.historique?.length || 0})` },
+              { key: 'fichiers',   label: `${t('fichiers')} (${data.nb_fichiers})` },
             ].map(o => (
               <button key={o.key} onClick={() => setOnglet(o.key)}
                 className={`flex-1 text-xs py-1.5 rounded-md font-medium transition ${
@@ -144,7 +146,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
           {onglet === 'durees' && (
             <div className="space-y-3">
               {data.duree_par_utilisateur?.length === 0 ? (
-                <div className="text-center text-gray-400 py-6 text-sm">Aucun historique disponible</div>
+                <div className="text-center text-gray-400 py-6 text-sm">{t('aucun_historique')}</div>
               ) : (
                 data.duree_par_utilisateur?.map((u, i) => (
                   <div key={i} className="bg-gray-50 rounded-xl p-3 border border-gray-200">
@@ -159,7 +161,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
                         {u.duree_jours} jour{u.duree_jours > 1 ? 's' : ''}
                       </span>
                     </div>
-                    <DureeBar jours={u.duree_jours} max={maxDuree} />
+                    <DureeBar jours={u.duree_jours} max={maxDuree} t={t} />
                   </div>
                 ))
               )}
@@ -170,7 +172,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
           {onglet === 'historique' && (
             <div className="space-y-2">
               {data.historique?.length === 0 ? (
-                <div className="text-center text-gray-400 py-6 text-sm">Aucune activité enregistrée</div>
+                <div className="text-center text-gray-400 py-6 text-sm">{t('aucune_activite')}</div>
               ) : (
                 data.historique?.map((h, i) => (
                   <div key={i} className="flex gap-3">
@@ -220,7 +222,7 @@ export default function RecapitulatifDossier({ dossierId, onClose }) {
           {onglet === 'fichiers' && (
             <div className="space-y-2">
               {data.fichiers?.length === 0 ? (
-                <div className="text-center text-gray-400 py-6 text-sm">Aucun fichier joint à ce dossier</div>
+                <div className="text-center text-gray-400 py-6 text-sm">{t('aucun_fichier_joint')}</div>
               ) : (
                 data.fichiers?.map((f, i) => (
                   <div key={i}
