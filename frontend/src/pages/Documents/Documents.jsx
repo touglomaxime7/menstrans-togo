@@ -325,7 +325,7 @@ export default function Documents() {
           <div className="relative">
             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
             <input value={search} onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher par code, nom fichier ou dossier..."
+              placeholder={t('rechercher_document')}
               className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-80 focus:border-blue-400"/>
           </div>
           <button onClick={() => setShowModal(true)}
@@ -341,23 +341,23 @@ export default function Documents() {
             <span className="text-[10px] text-gray-400">{filtered.length} document(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun document</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_document')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Code</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Nom fichier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Taille</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Assigné à</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date scan</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('code')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('dossier')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('client')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('type')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('nom_fichier')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('taille')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_label')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('assigne_a')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_scan')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -383,11 +383,11 @@ export default function Documents() {
                           title="Télécharger">⬇️</button>
                         <button onClick={() => handleVoirHistorique(d)}
                           className="h-6 px-2 bg-gray-50 text-gray-700 rounded text-[10px] border border-gray-200 hover:bg-gray-100"
-                          title="Historique">📋</button>
+                          title={t('historique')}>📋</button>
                         {peutEnvoyer() && (
                           <button onClick={() => handleEnvoyerService(d)}
                             className="h-6 px-2 bg-purple-50 text-purple-700 rounded text-[10px] border border-purple-200 hover:bg-purple-100"
-                            title={`Envoyer au ${getProchainService()}`}>
+                            title={`${t('envoyer_au')} ${getProchainService()}`}>
                             ➤ {getProchainService()}
                           </button>
                         )}
@@ -395,11 +395,11 @@ export default function Documents() {
                           <>
                             <button onClick={() => handleValider(d)}
                               className="h-6 px-2 bg-green-50 text-green-700 rounded text-[10px] border border-green-200 hover:bg-green-100">
-                              ✓ Valider
+                              ✓ {t('valider')}
                             </button>
                             <button onClick={() => handleRejeter(d)}
                               className="h-6 px-2 bg-red-50 text-red-700 rounded text-[10px] border border-red-200 hover:bg-red-100">
-                              ✗ Rejeter
+                              ✗ {t('rejeter')}
                             </button>
                           </>
                         )}
@@ -439,7 +439,7 @@ export default function Documents() {
                     });
                   }}
                   options={dossierOptions}
-                  placeholder="Rechercher un dossier ou un client..."
+                  placeholder={t('rechercher_dossier_ou_client')}
                 />
               </div>
 
@@ -450,7 +450,7 @@ export default function Documents() {
                   value={form.type_document}
                   onChange={(val) => setForm({ ...form, type_document: val })}
                   options={TYPES_LABELS}
-                  placeholder="Rechercher ou saisir un type..."
+                  placeholder={t('rechercher_type_document')}
                 />
               </div>
 
@@ -523,7 +523,7 @@ export default function Documents() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={fermerModal}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
                 <button type="submit"
                   className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
                   Enregistrer
@@ -540,7 +540,7 @@ export default function Documents() {
           <div className="bg-white rounded-xl w-[600px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">
-                Historique — {selectedDoc.code_document}
+                {t('historique')} — {selectedDoc.code_document}
               </span>
               <button onClick={() => setShowHistorique(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>

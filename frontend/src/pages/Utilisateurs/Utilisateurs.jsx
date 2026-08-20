@@ -135,14 +135,14 @@ export default function Utilisateurs() {
         <div className="flex justify-end">
           <button onClick={() => { setSelected(null); setForm({ nom: '', prenom: '', email: '', role: 'transit', password: '', actif: true }); setShowModal(true); }}
             className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouveau compte
+            {t('nouveau_compte')}
           </button>
         </div>
 
         {/* Grille utilisateurs */}
         {loading ? (
           <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">
-            Chargement...
+            {t('chargement')}
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-3">
@@ -175,12 +175,12 @@ export default function Utilisateurs() {
                           ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
                           : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
                       }`}>
-                      {u.actif ? 'Désactiver' : 'Activer'}
+                      {u.actif ? t('desactiver') : t('activer')}
                     </button>
                   </div>
                 </div>
                 <div className="mt-2 text-[10px] text-gray-400">
-                  Depuis le {u.date_debut}
+                  {t('depuis_le')} {u.date_debut}
                 </div>
               </div>
             ))}
@@ -194,7 +194,7 @@ export default function Utilisateurs() {
           <div className="bg-white rounded-xl w-[480px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
-                {selected ? 'Modifier le compte' : 'Nouveau compte'}
+                {selected ? t('modifier_le_compte') : t('nouveau_compte').replace('+ ', '')}
               </span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
@@ -203,13 +203,13 @@ export default function Utilisateurs() {
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Prénom *</label>
                   <input value={form.prenom} onChange={(e) => setForm({...form, prenom: e.target.value})}
-                    placeholder="Prénom"
+                    placeholder={t('prenom_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Nom *</label>
                   <input value={form.nom} onChange={(e) => setForm({...form, nom: e.target.value})}
-                    placeholder="Nom de famille"
+                    placeholder={t('nom_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1 col-span-2">
@@ -270,7 +270,7 @@ export default function Utilisateurs() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
                 <button type="submit"
                   className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
                   {selected ? 'Mettre à jour' : 'Créer le compte'}
