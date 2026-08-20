@@ -94,7 +94,7 @@ export default function Passation() {
         <div className="flex justify-end">
           <button onClick={() => setShowModal(true)}
             className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouvelle passation
+            {t('nouvelle_passation')}
           </button>
         </div>
 
@@ -104,20 +104,20 @@ export default function Passation() {
             <span className="text-[10px] text-gray-400">{passations.length} passation(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : passations.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucune passation</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucune_passation')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut douane</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Conforme</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date début</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date fin</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Traité par</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('dossier')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_douane')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('conforme')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_debut')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_fin')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('traite_par')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,7 +167,7 @@ export default function Passation() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[440px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">Nouvelle passation</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouvelle_passation').replace('+ ', '')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <div className="px-5 pt-3">
@@ -200,7 +200,7 @@ export default function Passation() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
                 <button type="submit"
                   className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
                   Créer
