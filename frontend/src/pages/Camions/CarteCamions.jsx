@@ -88,13 +88,13 @@ export default function CarteCamions() {
         {/* Carte OpenStreetMap intégrée */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-800">🗺️ Localisation en temps réel</span>
-            <span className="text-[10px] text-gray-400">{camionsEnMission.length} camion(s) géolocalisé(s)</span>
+            <span className="text-xs font-medium text-gray-800">🗺️ {t('localisation_temps_reel')}</span>
+            <span className="text-[10px] text-gray-400">{camionsEnMission.length} {t('camions_geolocalises')}</span>
           </div>
           <div style={{ height: '500px', width: '100%' }}>
             {loading ? (
               <div className="h-full flex items-center justify-center text-gray-400 text-sm">
-                Chargement de la carte...
+                {t('chargement_carte')}
               </div>
             ) : (
               <iframe

@@ -220,19 +220,19 @@ export default function SuiviCamions() {
             <span className="text-[10px] text-gray-400">{camions.length} camion(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
           ) : camions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun camion</div>
+            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_camion')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Immat.</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Chauffeur</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mission</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Position</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('immat_court')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('chauffeur')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_label')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('mission')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('position')}</th>
+                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,13 +295,13 @@ export default function SuiviCamions() {
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Marchandise transportée *</label>
                 <textarea value={affectForm.marchandise} onChange={(e) => setAffectForm({...affectForm, marchandise: e.target.value})}
-                  placeholder="ex: 50 cartons de matériel électronique"
+                  placeholder={t('marchandise_placeholder')}
                   className="border border-gray-200 rounded-md px-3 py-2 text-xs outline-none focus:border-blue-400 h-16 resize-none"/>
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Destination *</label>
                 <input value={affectForm.destination} onChange={(e) => setAffectForm({...affectForm, destination: e.target.value})}
-                  placeholder="ex: Entrepôt Lomé Zone Industrielle"
+                  placeholder={t('entrepot_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="flex justify-end gap-2 pt-2">
@@ -331,7 +331,7 @@ export default function SuiviCamions() {
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Position actuelle *</label>
                 <input value={positionForm.position} onChange={(e) => setPositionForm({...positionForm, position: e.target.value})}
-                  placeholder="ex: Sur la route nationale 1, près d'Aného"
+                  placeholder={t('route_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -382,7 +382,7 @@ export default function SuiviCamions() {
             </div>
             <div className="p-5 max-h-[500px] overflow-y-auto">
               {positions.length === 0 ? (
-                <div className="text-center text-gray-400 text-sm py-8">Aucune position enregistrée</div>
+                <div className="text-center text-gray-400 text-sm py-8">{t('aucune_position_enregistree')}</div>
               ) : (
                 <div className="flex flex-col gap-3">
                   {positions.map((p, idx) => (
