@@ -86,7 +86,7 @@ export default function CarteCamions() {
         </div>
 
         {/* Carte OpenStreetMap intégrée */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">🗺️ {t('localisation_temps_reel')}</span>
             <span className="text-[10px] text-gray-400">{camionsEnMission.length} {t('camions_geolocalises')}</span>

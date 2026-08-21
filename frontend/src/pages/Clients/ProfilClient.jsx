@@ -167,23 +167,23 @@ export default function ProfilClient() {
 
         {/* ── Onglet Dossiers ── */}
         {onglet === 'dossiers' && (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Dossiers du client</span>
             </div>
             {dossiers.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">Aucun dossier pour ce client</div>
+              <div className="p-10 text-center text-ink-400 text-sm">Aucun dossier pour ce client</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Classification</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mode sortie</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date début</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase"></th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">N° Dossier</th>
+                    <th className="elegant-th">Type</th>
+                    <th className="elegant-th">Classification</th>
+                    <th className="elegant-th">Mode sortie</th>
+                    <th className="elegant-th">Statut</th>
+                    <th className="elegant-th">Date début</th>
+                    <th className="elegant-th"></th>
                   </tr>
                 </thead>
                 <tbody>

@@ -148,33 +148,33 @@ export default function Camions() {
         {/* Toolbar */}
         <div className="flex justify-end">
           <button onClick={() => { setSelected(null); setShowModal(true); }}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
             {t('ajouter_un_camion')}
           </button>
         </div>
 
         {/* Tableau */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">{t('parc_de_camions')}</span>
             <span className="text-[10px] text-gray-400">{camions.length} camion(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : camions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_camion_enregistre')}</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_camion_enregistre')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('immatriculation')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('marque_modele')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('type')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('capacite')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('chauffeur_attitre')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('telephone')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_label')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">{t('immatriculation')}</th>
+                  <th className="elegant-th">{t('marque_modele')}</th>
+                  <th className="elegant-th">{t('type')}</th>
+                  <th className="elegant-th">{t('capacite')}</th>
+                  <th className="elegant-th">{t('chauffeur_attitre')}</th>
+                  <th className="elegant-th">{t('telephone')}</th>
+                  <th className="elegant-th">{t('statut_label')}</th>
+                  <th className="elegant-th">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -236,7 +236,7 @@ export default function Camions() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[520px] border border-gray-200 shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl w-[520px] border border-gray-200 shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
                 {selected ? 'Modifier le camion' : 'Ajouter un camion'}
@@ -353,9 +353,9 @@ export default function Camions() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   {selected ? 'Mettre à jour' : 'Ajouter'}
                 </button>
               </div>

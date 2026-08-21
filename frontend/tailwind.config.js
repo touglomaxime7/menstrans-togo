@@ -14,6 +14,30 @@ export default {
           700: '#1F3864',
           900: '#0C2444',
         },
+        ink: {
+          50:  '#F7F8FA',
+          100: '#EEF0F4',
+          200: '#DFE3EA',
+          300: '#C4CAD6',
+          400: '#8D96A8',
+          500: '#5C6579',
+          600: '#434B5C',
+          700: '#2E3542',
+          800: '#1D222C',
+          900: '#12151C',
+        },
+        gold: {
+          50:  '#FBF6E9',
+          100: '#F4E7BF',
+          300: '#E2C270',
+          500: '#C9A227',
+          600: '#A9841C',
+          700: '#846315',
+        },
+      },
+      fontFamily: {
+        display: ['Sora', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
       },
       keyframes: {
         floatSlow: {

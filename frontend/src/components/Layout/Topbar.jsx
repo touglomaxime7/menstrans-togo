@@ -95,21 +95,21 @@ export default function Topbar({ title, subtitle }) {
   };
 
   return (
-    <div className="bg-white h-14 px-4 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
+    <div className="bg-white h-16 px-5 flex items-center justify-between border-b border-ink-100 flex-shrink-0">
       {/* Bouton menu (hamburger) + Titre */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <button
           onClick={toggleSidebar}
           title={t('etendre_menu')}
-          className="w-9 h-9 flex flex-col items-center justify-center gap-1 rounded-md hover:bg-gray-100 transition-colors flex-shrink-0"
+          className="w-9 h-9 flex flex-col items-center justify-center gap-1 rounded-md hover:bg-ink-50 transition-colors flex-shrink-0"
         >
-          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
-          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
-          <span className="block w-5 h-0.5 bg-gray-600 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
         </button>
         <div>
-          <div className="text-sm font-medium text-gray-800">{title}</div>
-          <div className="text-[10px] text-gray-400">{subtitle || today}</div>
+          <div className="text-[15px] font-semibold text-ink-800 font-display tracking-tight">{title}</div>
+          <div className="text-[11px] text-ink-400 mt-0.5">{subtitle || today}</div>
         </div>
       </div>
 

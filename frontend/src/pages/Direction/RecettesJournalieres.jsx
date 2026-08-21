@@ -56,15 +56,15 @@ export default function RecettesJournalieres() {
         <>
           {/* Cartes résumé */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
+            <div className="elegant-card p-5 card-hover">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('total_recettes')}</p>
               <p className="text-2xl font-bold text-green-600">{formatFCFA(data.total_recettes)}</p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
+            <div className="elegant-card p-5 card-hover">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('total_debours')}</p>
               <p className="text-2xl font-bold text-red-500">{formatFCFA(data.total_debours)}</p>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm card-hover">
+            <div className="elegant-card p-5 card-hover">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('solde_journalier')}</p>
               <p className={`text-2xl font-bold ${soldeColor(data.solde_journalier)}`}>
                 {formatFCFA(data.solde_journalier)}

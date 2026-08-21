@@ -53,7 +53,7 @@ export default function Sidebar() {
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <div className="text-white text-base font-semibold tracking-wide">e-Trans</div>
+            <div className="text-white text-[17px] font-semibold tracking-tight font-display">e-Trans</div>
             <div className="flex items-center gap-1.5 mt-0.5">
               <div className="h-px w-3 bg-red-400"></div>
               <div className="text-red-300 text-[10px] font-medium tracking-[0.2em]">TOGO</div>
@@ -86,17 +86,24 @@ export default function Sidebar() {
                 onClick={closeMobileMenu}
                 title={collapsed ? t(item.labelKey) : undefined}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 mx-2 px-4 py-3 rounded-md text-sm cursor-pointer transition-all duration-200 ${
+                  `group relative flex items-center gap-3 mx-2 px-4 py-2.5 rounded-lg text-[13px] cursor-pointer transition-all duration-200 ${
                     collapsed ? 'justify-center px-0' : ''
                   } ${
                     isActive
-                      ? 'bg-[#2E5FA3] text-white shadow-md translate-x-0.5'
-                      : 'text-[#C5DCF0] hover:bg-white/10 hover:translate-x-0.5'
+                      ? 'bg-white/10 text-white font-medium'
+                      : 'text-[#A9BBD6] hover:bg-white/5 hover:text-white'
                   }`
                 }
               >
-                <span className="text-lg transition-transform duration-200 group-hover:scale-110">{item.icon}</span>
-                {!collapsed && <span>{t(item.labelKey)}</span>}
+                {({ isActive }) => (
+                  <>
+                    {isActive && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r bg-gradient-to-b from-gold-300 to-gold-500" />
+                    )}
+                    <span className="text-lg transition-transform duration-200 group-hover:scale-110">{item.icon}</span>
+                    {!collapsed && <span>{t(item.labelKey)}</span>}
+                  </>
+                )}
               </NavLink>
             </motion.div>
           );
@@ -106,7 +113,7 @@ export default function Sidebar() {
       {/* Footer utilisateur */}
       <div className="relative p-4 border-t border-[#2A4A7A]">
         <div className={`flex items-center gap-3 ${collapsed ? 'justify-center' : ''}`}>
-          <div className="w-10 h-10 rounded-full bg-[#2E5FA3] flex items-center justify-center text-white text-xs font-medium ring-2 ring-white/10 flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-300 to-gold-600 flex items-center justify-center text-[#1D222C] text-xs font-bold ring-2 ring-white/10 flex-shrink-0">
             {initiales}
           </div>
           {!collapsed && (

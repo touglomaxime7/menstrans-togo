@@ -60,7 +60,7 @@ export default function SplashScreen() {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="text-center mt-4"
         >
-          <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">e-Trans</h1>
+          <h1 className="text-5xl font-bold text-white tracking-tight drop-shadow-lg font-display">e-Trans</h1>
           <div className="flex items-center justify-center gap-3 mt-2">
             <div className="h-0.5 w-12 bg-red-400"></div>
             <p className="text-red-300 text-lg font-medium tracking-[0.4em]">TOGO</p>

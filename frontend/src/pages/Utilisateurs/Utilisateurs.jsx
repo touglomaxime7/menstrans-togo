@@ -134,20 +134,20 @@ export default function Utilisateurs() {
         {/* Toolbar */}
         <div className="flex justify-end">
           <button onClick={() => { setSelected(null); setForm({ nom: '', prenom: '', email: '', role: 'transit', password: '', actif: true }); setShowModal(true); }}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
             {t('nouveau_compte')}
           </button>
         </div>
 
         {/* Grille utilisateurs */}
         {loading ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">
+          <div className="elegant-card p-10 text-center text-ink-400 text-sm">
             {t('chargement')}
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-3">
             {users.map((u) => (
-              <div key={u.id} className="bg-white rounded-lg border border-gray-200 p-4">
+              <div key={u.id} className="elegant-card p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-sm font-medium text-blue-700">
@@ -191,7 +191,7 @@ export default function Utilisateurs() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
+          <div className="bg-white rounded-2xl w-[480px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
                 {selected ? t('modifier_le_compte') : t('nouveau_compte').replace('+ ', '')}
@@ -270,9 +270,9 @@ export default function Utilisateurs() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   {selected ? 'Mettre à jour' : 'Créer le compte'}
                 </button>
               </div>

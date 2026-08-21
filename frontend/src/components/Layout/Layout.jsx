@@ -6,11 +6,11 @@ import Topbar  from './Topbar';
 export default function Layout({ children, title, subtitle }) {
   const location = useLocation();
   return (
-    <div className="flex min-h-screen bg-gray-100 font-sans">
+    <div className="flex min-h-screen bg-ink-50 font-sans">
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <Topbar title={title} subtitle={subtitle} />
-        <main className="flex-1 p-4 overflow-y-auto">
+        <main className="flex-1 p-5 overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}

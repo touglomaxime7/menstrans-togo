@@ -97,7 +97,7 @@ export default function Login() {
               />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-wide">e-Trans</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight font-display">e-Trans</h1>
           <div className="flex items-center gap-2 mt-1">
             <div className="h-0.5 w-6 bg-red-400"></div>
             <p className="text-xs text-red-300 font-medium tracking-[0.3em]">TOGO</p>
@@ -114,7 +114,8 @@ export default function Login() {
         >
 
           <div className="mb-6">
-            <h2 className="text-xl font-medium text-gray-800 mb-1">{t('connexion')}</h2>
+            <h2 className="text-xl font-semibold text-ink-800 mb-1 font-display">{t('connexion')}</h2>
+            <div className="h-[2px] w-9 bg-gradient-to-r from-gold-300 to-gold-500 rounded-full mb-2.5" />
             <p className="text-xs text-gray-400">
               {t('connexion_soustitre')}
             </p>

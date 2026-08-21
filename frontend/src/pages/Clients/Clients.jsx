@@ -170,31 +170,31 @@ export default function Clients() {
               className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-96 focus:border-blue-400"/>
           </div>
           <button onClick={ouvrirNouveau}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
             {t('nouveau_client')}
           </button>
         </div>
 
         {/* Tableau */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">Liste des clients</span>
             <span className="text-[10px] text-gray-400">{filtered.length} client(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">{t('chargement')}</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">{t('aucun_client')}</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_client')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('nom')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('telephone')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('email')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('ville')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('pays')}</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">{t('nom')}</th>
+                  <th className="elegant-th">{t('telephone')}</th>
+                  <th className="elegant-th">{t('email')}</th>
+                  <th className="elegant-th">{t('ville')}</th>
+                  <th className="elegant-th">{t('pays')}</th>
+                  <th className="elegant-th">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -363,9 +363,9 @@ export default function Clients() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">Annuler</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   {selected ? 'Mettre à jour' : 'Créer le client'}
                 </button>
               </div>

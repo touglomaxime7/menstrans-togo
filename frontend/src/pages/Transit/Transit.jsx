@@ -165,7 +165,7 @@ export default function Transit() {
               {t('nouvelle_etude')}
             </button>
             <button onClick={() => setShowModal(true)}
-              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
               {t('nouvelle_declaration')}
             </button>
           </div>
@@ -173,29 +173,29 @@ export default function Transit() {
 
         {/* Contenu */}
         {loading ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">
+          <div className="elegant-card p-10 text-center text-ink-400 text-sm">
             {t('chargement')}
           </div>
         ) : activeTab === 'declarations' ? (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Liste des déclarations</span>
               <span className="text-[10px] text-gray-400">{declarations.length} déclaration(s)</span>
             </div>
             {declarations.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">{t('aucune_declaration')}</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_declaration')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('numero_declaration')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('dossier')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('navire')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date_arrivee')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('total')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut_label')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('numero_declaration')}</th>
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">{t('navire')}</th>
+                    <th className="elegant-th">{t('date_arrivee')}</th>
+                    <th className="elegant-th">DTD</th>
+                    <th className="elegant-th">{t('total')}</th>
+                    <th className="elegant-th">{t('statut_label')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -235,23 +235,23 @@ export default function Transit() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Études de valeur</span>
               <span className="text-[10px] text-gray-400">{etudes.length} étude(s)</span>
             </div>
             {etudes.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">{t('aucune_etude_valeur')}</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_etude_valeur')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('dossier')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('complement_direction')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('approuve_client')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date')}</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('actions_label')}</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">DTD</th>
+                    <th className="elegant-th">{t('complement_direction')}</th>
+                    <th className="elegant-th">{t('approuve_client')}</th>
+                    <th className="elegant-th">{t('date')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -299,7 +299,7 @@ export default function Transit() {
       {/* Modal nouvelle déclaration (inchangé) */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">{t('nouvelle_declaration_titre')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
@@ -349,9 +349,9 @@ export default function Transit() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Créer la déclaration
                 </button>
               </div>
@@ -393,9 +393,9 @@ export default function Transit() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowEtudeModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">{t('annuler')}</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Enregistrer le DTD
                 </button>
               </div>

@@ -5,6 +5,17 @@ html {
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .font-display {
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
 @layer utilities {
   .card-hover {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -23,5 +34,57 @@ html {
   }
   .btn-hover:active {
     transform: translateY(0px) scale(0.98);
+  }
+
+  /* Titre de page avec filet doré signature — évoque un cachet officiel */
+  .page-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #1D222C;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.35rem;
+  }
+  .page-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 2.25rem;
+    background: linear-gradient(90deg, #C9A227, #E2C270);
+    border-radius: 2px;
+  }
+
+  /* Carte élégante réutilisable */
+  .elegant-card {
+    background: #ffffff;
+    border: 1px solid #EEF0F4;
+    border-radius: 0.875rem;
+    box-shadow: 0 1px 2px rgba(18, 21, 28, 0.04), 0 1px 12px rgba(18, 21, 28, 0.03);
+  }
+
+  /* En-tête de tableau élégant */
+  .elegant-th {
+    padding: 0.7rem 0.85rem;
+    text-align: left;
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8D96A8;
+    font-weight: 600;
+    background: #FAFBFC;
+    border-bottom: 1px solid #EEF0F4;
+  }
+  .elegant-row {
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #F3F4F7;
+  }
+  .elegant-row:hover {
+    background-color: #FAFBFD;
+  }
+  .elegant-row:last-child {
+    border-bottom: none;
   }
 }

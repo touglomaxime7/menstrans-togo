@@ -242,13 +242,14 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="relative overflow-hidden bg-gradient-to-r from-[#1F3864] to-[#2E5FA3] bg-200 animate-gradientShift rounded-lg p-5 text-white"
+            className="relative overflow-hidden bg-gradient-to-r from-[#1F3864] to-[#2E5FA3] bg-200 animate-gradientShift rounded-2xl p-6 text-white shadow-lg"
           >
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300" />
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl animate-floatSlow pointer-events-none" />
             <div className="relative flex items-center gap-3">
               <div className="text-4xl">{config.icone}</div>
               <div>
-                <div className="text-lg font-medium">
+                <div className="text-lg font-semibold font-display">
                   {t('bonjour')} {utilisateur?.prenom} {utilisateur?.nom} !
                 </div>
                 <div className="text-sm text-blue-100 mt-1">
@@ -271,13 +272,13 @@ export default function Dashboard() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.05 * i }}
-                className={`${s.bg} card-hover rounded-lg p-4 border border-gray-200`}
+                className={`${s.bg} card-hover elegant-card p-4`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <div className="text-[10px] text-gray-500">{s.label}</div>
+                  <div className="text-[10px] text-ink-400 uppercase tracking-wide font-medium">{s.label}</div>
                   <div className="text-xl">{s.icon}</div>
                 </div>
-                <div className={`text-3xl font-bold ${s.color}`}>{s.value}</div>
+                <div className={`text-3xl font-bold font-display ${s.color}`}>{s.value}</div>
               </motion.div>
             ))}
           </div>
@@ -288,10 +289,10 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.2 }}
-              className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+              className="elegant-card overflow-hidden"
             >
-              <div className="px-4 py-3 border-b border-gray-100">
-                <span className="text-sm font-medium text-gray-800">⚡ {t('actions_rapides')}</span>
+              <div className="px-4 py-3 border-b border-ink-100">
+                <span className="text-sm font-semibold text-ink-800">⚡ {t('actions_rapides')}</span>
               </div>
               <div className="p-4 grid grid-cols-4 gap-3">
                 {actions.map((a, i) => (
@@ -318,10 +319,10 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.3 }}
-            className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+            className="elegant-card overflow-hidden"
           >
-            <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">
+            <div className="px-4 py-3 border-b border-ink-100 flex items-center justify-between">
+              <span className="text-sm font-semibold text-ink-800">
                 {utilisateur?.role === 'admin' || utilisateur?.role === 'direction' 
                   ? `📁 ${t('derniers_dossiers')}` 
                   : `⚠️ ${t('dossiers_a_traiter')}`}
@@ -331,24 +332,24 @@ export default function Dashboard() {
               </span>
             </div>
             {dossiersAction.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">
+              <div className="p-10 text-center text-ink-400 text-sm">
                 ✓ {t('aucun_dossier_attente')}
               </div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° {t('nav_dossiers')}</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('client')}</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('type')}</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('statut')}</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('date')}</th>
-                    <th className="px-4 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">{t('action')}</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">N° {t('nav_dossiers')}</th>
+                    <th className="elegant-th">{t('client')}</th>
+                    <th className="elegant-th">{t('type')}</th>
+                    <th className="elegant-th">{t('statut')}</th>
+                    <th className="elegant-th">{t('date')}</th>
+                    <th className="elegant-th">{t('action')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dossiersAction.slice(0, 10).map((d) => (
-                    <tr key={d.id} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
+                    <tr key={d.id} className="border-b border-gray-50 hover:bg-ink-50 cursor-pointer"
                       onClick={() => navigate(`/dossiers/${d.id}`)}>
                       <td className="px-4 py-2 font-medium text-blue-600">{d.numero_dossier}</td>
                       <td className="px-4 py-2 text-gray-700">{d.client_nom}</td>

@@ -219,7 +219,7 @@ const handleEnvoyerEtapeSuivante = async () => {
         </div>
 
         {/* Header */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="elegant-card p-4">
           <div className="flex items-start justify-between mb-3">
             <div>
               <div className="text-lg font-medium text-gray-800">{dossier.numero_dossier}</div>
@@ -331,7 +331,7 @@ const handleEnvoyerEtapeSuivante = async () => {
         )}
 
         {/* Documents */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-800">📄 Documents du dossier</span>
@@ -345,19 +345,19 @@ const handleEnvoyerEtapeSuivante = async () => {
             </button>
           </div>
           {documents.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun document associé à ce dossier</div>
+            <div className="p-10 text-center text-ink-400 text-sm">Aucun document associé à ce dossier</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Code</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Nom fichier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Taille</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Assigné à</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">Code</th>
+                  <th className="elegant-th">Type</th>
+                  <th className="elegant-th">Nom fichier</th>
+                  <th className="elegant-th">Taille</th>
+                  <th className="elegant-th">Statut</th>
+                  <th className="elegant-th">Assigné à</th>
+                  <th className="elegant-th">Date</th>
+                  <th className="elegant-th">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -391,7 +391,7 @@ const handleEnvoyerEtapeSuivante = async () => {
 
         {/* Grille infos */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Informations client</span>
             </div>
@@ -412,7 +412,7 @@ const handleEnvoyerEtapeSuivante = async () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Observations</span>
             </div>
@@ -423,7 +423,7 @@ const handleEnvoyerEtapeSuivante = async () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Actions rapides</span>
             </div>
