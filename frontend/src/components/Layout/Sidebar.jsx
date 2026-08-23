@@ -1,28 +1,33 @@
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  LayoutDashboard, FileText, Users, FolderOpen, FileSignature,
+  Wallet, History, Clock, CheckSquare, Truck, MapPin, Map,
+  Landmark, Archive, UserCog, Settings, Lock, LogOut,
+} from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useUI } from '../../context/UIContext';
 
 const menuItems = [
-  { path: '/dashboard',    labelKey: 'nav_dashboard', icon: '⊞',  roles: [], end: true },
-  { path: '/documents',    labelKey: 'nav_documents', icon: '📄', roles: [], end: false },
-  { path: '/clients',      labelKey: 'nav_clients',   icon: '👥', roles: [], end: false },
-  { path: '/dossiers',     labelKey: 'nav_dossiers',  icon: '📁', roles: [], end: false },
-  { path: '/contrats',          labelKey: 'nav_contrats', icon: '📝', roles: [], end: false },
-  { path: '/direction/recettes',labelKey: 'nav_recettes', icon: '💵', roles: ['admin', 'direction', 'assistant_directeur'], end: false },
-  { path: '/historique', labelKey: 'nav_historique', icon: '🕐', roles: ['admin', 'direction'], end: false },
-  { path: '/transit',      labelKey: 'nav_transit',      icon: '🕐', roles: ['transit'], end: false },
-  { path: '/passation',    labelKey: 'nav_passation',    icon: '✅', roles: ['passation'], end: false },
-  { path: '/logistique',   labelKey: 'nav_logistique',   icon: '🚛', roles: ['logistique'], end: false },
-  { path: '/camions',      labelKey: 'nav_camions',      icon: '🚚', roles: ['logistique'], end: false },
-  { path: '/suivi-camions',labelKey: 'nav_suivi_camions',icon: '📍', roles: ['logistique'], end: false },
-  { path: '/carte-camions',labelKey: 'nav_carte_gps',    icon: '🗺️', roles: ['logistique'], end: false },
-  { path: '/finance',      labelKey: 'nav_finance',      icon: '💰', roles: ['caisse', 'comptabilite'], end: false },
-  { path: '/archives',     labelKey: 'nav_archives',     icon: '🗄️', roles: [], end: false },
-  { path: '/utilisateurs', labelKey: 'nav_utilisateurs', icon: '👤', roles: ['admin', 'direction'], end: false },
-  { path: '/mon-profil',   labelKey: 'nav_mon_profil',   icon: '⚙️', roles: [], end: false },
-  { path: '/direction/etudes', labelKey: 'nav_etudes', icon: '🔒', roles: ['direction'], end: false },
+  { path: '/dashboard',    labelKey: 'nav_dashboard', icon: LayoutDashboard, roles: [], end: true },
+  { path: '/documents',    labelKey: 'nav_documents', icon: FileText, roles: [], end: false },
+  { path: '/clients',      labelKey: 'nav_clients',   icon: Users, roles: [], end: false },
+  { path: '/dossiers',     labelKey: 'nav_dossiers',  icon: FolderOpen, roles: [], end: false },
+  { path: '/contrats',          labelKey: 'nav_contrats', icon: FileSignature, roles: [], end: false },
+  { path: '/direction/recettes',labelKey: 'nav_recettes', icon: Wallet, roles: ['admin', 'direction', 'assistant_directeur'], end: false },
+  { path: '/historique', labelKey: 'nav_historique', icon: History, roles: ['admin', 'direction'], end: false },
+  { path: '/transit',      labelKey: 'nav_transit',      icon: Clock, roles: ['transit'], end: false },
+  { path: '/passation',    labelKey: 'nav_passation',    icon: CheckSquare, roles: ['passation'], end: false },
+  { path: '/logistique',   labelKey: 'nav_logistique',   icon: Truck, roles: ['logistique'], end: false },
+  { path: '/camions',      labelKey: 'nav_camions',      icon: Truck, roles: ['logistique'], end: false },
+  { path: '/suivi-camions',labelKey: 'nav_suivi_camions',icon: MapPin, roles: ['logistique'], end: false },
+  { path: '/carte-camions',labelKey: 'nav_carte_gps',    icon: Map, roles: ['logistique'], end: false },
+  { path: '/finance',      labelKey: 'nav_finance',      icon: Landmark, roles: ['caisse', 'comptabilite'], end: false },
+  { path: '/archives',     labelKey: 'nav_archives',     icon: Archive, roles: [], end: false },
+  { path: '/utilisateurs', labelKey: 'nav_utilisateurs', icon: UserCog, roles: ['admin', 'direction'], end: false },
+  { path: '/mon-profil',   labelKey: 'nav_mon_profil',   icon: Settings, roles: [], end: false },
+  { path: '/direction/etudes', labelKey: 'nav_etudes', icon: Lock, roles: ['direction'], end: false },
 ];
 
 export default function Sidebar() {
@@ -95,15 +100,18 @@ export default function Sidebar() {
                   }`
                 }
               >
-                {({ isActive }) => (
-                  <>
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r bg-gradient-to-b from-gold-300 to-gold-500" />
-                    )}
-                    <span className="text-lg transition-transform duration-200 group-hover:scale-110">{item.icon}</span>
-                    {!collapsed && <span>{t(item.labelKey)}</span>}
-                  </>
-                )}
+                {({ isActive }) => {
+                  const Icon = item.icon;
+                  return (
+                    <>
+                      {isActive && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r bg-gradient-to-b from-gold-300 to-gold-500" />
+                      )}
+                      <Icon size={18} strokeWidth={2} className="transition-transform duration-200 group-hover:scale-110 flex-shrink-0" />
+                      {!collapsed && <span>{t(item.labelKey)}</span>}
+                    </>
+                  );
+                }}
               </NavLink>
             </motion.div>
           );
@@ -128,10 +136,10 @@ export default function Sidebar() {
           )}
           <button
             onClick={handleLogout}
-            className="text-[#5A7FA0] hover:text-white text-base transition-transform hover:scale-110 flex-shrink-0"
+            className="text-[#5A7FA0] hover:text-white transition-transform hover:scale-110 flex-shrink-0"
             title={t('deconnexion')}
           >
-            ⏻
+            <LogOut size={17} strokeWidth={2} />
           </button>
         </div>
       </div>

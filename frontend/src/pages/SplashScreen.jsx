@@ -34,6 +34,14 @@ export default function SplashScreen() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0C2444] via-[#1F3864] to-[#2E5FA3] bg-200 animate-gradientShift flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Photo réelle en fond, très discrète */}
+      <img
+        src="https://images.pexels.com/photos/27099095/pexels-photo-27099095.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-[0.12] mix-blend-luminosity"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0C2444]/95 via-[#1F3864]/90 to-[#2E5FA3]/85" />
+
       <div className="absolute top-10 -left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-floatSlow"></div>
       <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-floatSlower"></div>
 

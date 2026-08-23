@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useUI } from '../../context/UIContext';
 import api from '../../api/axios';
+import { Search, X, FolderOpen, Users, FileSignature, Bell } from 'lucide-react';
 
 export default function Topbar({ title, subtitle }) {
   const { utilisateur } = useAuth();
@@ -116,7 +117,7 @@ export default function Topbar({ title, subtitle }) {
       {/* Barre de recherche globale */}
       <div ref={wrapperRef} className="relative flex-1 max-w-lg mx-6">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+          <Search size={13} strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={query}
@@ -126,15 +127,13 @@ export default function Topbar({ title, subtitle }) {
             className="w-full h-9 pl-8 pr-4 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 bg-gray-50"
           />
           {loading && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]">
-              ⏳
-            </span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
           )}
           {query && !loading && (
             <button
               onClick={() => { setQuery(''); setResults(null); setShowDrop(false); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs">
-              ✕
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <X size={13} strokeWidth={2} />
             </button>
           )}
         </div>
@@ -160,7 +159,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.dossiers.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📁 {t('dossiers_label')} ({results.dossiers.length})
+                      <span className="inline-flex items-center gap-1.5"><FolderOpen size={12} strokeWidth={2} />{t('dossiers_label')} ({results.dossiers.length})</span>
                     </div>
                     {results.dossiers.map(d => (
                       <button key={d.id}
@@ -193,7 +192,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.clients.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      👥 {t('clients_label')} ({results.clients.length})
+                      <span className="inline-flex items-center gap-1.5"><Users size={12} strokeWidth={2} />{t('clients_label')} ({results.clients.length})</span>
                     </div>
                     {results.clients.map(c => (
                       <button key={c.id}
@@ -217,7 +216,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.contrats.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📝 {t('contrats_label')} ({results.contrats.length})
+                      <span className="inline-flex items-center gap-1.5"><FileSignature size={12} strokeWidth={2} />{t('contrats_label')} ({results.contrats.length})</span>
                     </div>
                     {results.contrats.map(c => (
                       <button key={c.id}
@@ -272,7 +271,7 @@ export default function Topbar({ title, subtitle }) {
           {today}
         </div>
         <div className="relative cursor-pointer transition-transform hover:scale-110">
-          <span className="text-gray-500 text-sm">🔔</span>
+          <Bell size={16} strokeWidth={2} className="text-gray-500" />
         </div>
         <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[9px] font-medium text-blue-800 transition-transform hover:scale-110 ring-2 ring-transparent hover:ring-blue-200">
           {initiales}
