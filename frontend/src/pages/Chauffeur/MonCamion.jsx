@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 export default function MonCamion() {
   const navigate = useNavigate();
   const { utilisateur, handleLogout } = useAuth();
+  const { t, lang, toggleLang } = useLanguage();
   const [camion, setCamion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tracking, setTracking] = useState(false);
@@ -169,7 +171,7 @@ export default function MonCamion() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-gray-400">Chargement...</div>
+        <div className="text-gray-400">{t('chargement')}</div>
       </div>
     );
   }
@@ -179,13 +181,13 @@ export default function MonCamion() {
       <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
         <div className="bg-white rounded-xl p-6 text-center">
           <div className="text-4xl mb-3">🚛</div>
-          <h2 className="text-lg font-medium text-gray-800 mb-2">Aucun camion assigné</h2>
+          <h2 className="text-lg font-medium text-gray-800 mb-2">{t('aucun_camion_assigne')}</h2>
           <p className="text-sm text-gray-500 mb-4">
-            Vous n'avez pas de camion qui vous est assigné pour le moment.
+            {t('aucun_camion_texte')}
           </p>
           <button onClick={handleLogout}
             className="h-9 px-4 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700">
-            Se déconnecter
+            {t('deconnexion')}
           </button>
         </div>
       </div>
@@ -198,12 +200,16 @@ export default function MonCamion() {
       <div className="bg-[#1F3864] text-white p-4 sticky top-0 z-10 shadow-md">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-xs text-blue-200">Bienvenue</div>
+            <div className="text-xs text-blue-200">{t('bienvenue')}</div>
             <div className="text-sm font-medium">{utilisateur?.prenom} {utilisateur?.nom}</div>
           </div>
+          <button onClick={toggleLang}
+            className="h-8 px-2.5 bg-white/10 border border-white/20 text-white rounded text-xs font-semibold hover:bg-white/20">
+            {lang.toUpperCase()}
+          </button>
           <button onClick={handleLogout}
             className="h-8 px-3 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700">
-            Déconnexion
+            {t('deconnexion')}
           </button>
         </div>
       </div>
@@ -232,14 +238,14 @@ export default function MonCamion() {
                 <div className="flex items-start gap-2">
                   <span className="text-gray-500">📦</span>
                   <div>
-                    <div className="text-[10px] text-gray-400 uppercase">Marchandise</div>
+                    <div className="text-[10px] text-gray-400 uppercase">{t('marchandise')}</div>
                     <div className="text-gray-700 font-medium">{camion.marchandise_transportee}</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-gray-500">🎯</span>
                   <div>
-                    <div className="text-[10px] text-gray-400 uppercase">Destination</div>
+                    <div className="text-[10px] text-gray-400 uppercase">{t('destination')}</div>
                     <div className="text-gray-700 font-medium">{camion.destination_actuelle}</div>
                   </div>
                 </div>
@@ -247,7 +253,7 @@ export default function MonCamion() {
                   <div className="flex items-start gap-2">
                     <span className="text-gray-500">📋</span>
                     <div>
-                      <div className="text-[10px] text-gray-400 uppercase">Dossier</div>
+                      <div className="text-[10px] text-gray-400 uppercase">{t('dossier')}</div>
                       <div className="text-purple-700 font-medium">{camion.dossier_num} - {camion.dossier_client}</div>
                     </div>
                   </div>
@@ -260,23 +266,23 @@ export default function MonCamion() {
         {/* Bouton GPS */}
         {camion.statut === 'en_mission' && (
           <div className="bg-white rounded-xl p-5 shadow-sm">
-            <div className="text-sm font-medium text-gray-800 mb-3">📍 Suivi GPS</div>
+            <div className="text-sm font-medium text-gray-800 mb-3">📍 {t('suivi_gps')}</div>
             
             {tracking ? (
               <>
                 <div className="bg-green-50 rounded-lg p-3 border border-green-200 mb-3">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                    <span className="text-sm font-medium text-green-800">Suivi GPS actif</span>
+                    <span className="text-sm font-medium text-green-800">{t('suivi_gps_actif')}</span>
                   </div>
                   <div className="text-[10px] text-green-600 mt-1">
-                    Position envoyée toutes les 30 secondes
+                    {t('position_envoyee_30s')}
                   </div>
                 </div>
                 
                 {lastPosition && (
                   <div className="bg-gray-50 rounded-lg p-3 mb-3 border border-gray-200">
-                    <div className="text-[10px] text-gray-400 uppercase mb-1">Dernière position</div>
+                    <div className="text-[10px] text-gray-400 uppercase mb-1">{t('derniere_position')}</div>
                     <div className="text-xs text-gray-700">{lastPosition.position}</div>
                     <div className="text-[10px] text-gray-400 mt-1">
                       🕐 {lastPosition.time.toLocaleTimeString('fr-FR')}
@@ -286,13 +292,13 @@ export default function MonCamion() {
                 
                 <button onClick={stopTracking}
                   className="w-full h-12 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 flex items-center justify-center gap-2">
-                  ⏸️ Arrêter le suivi GPS
+                  ⏸️ {t('arreter_suivi_gps')}
                 </button>
               </>
             ) : (
               <button onClick={startTracking}
                 className="w-full h-12 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center gap-2 shadow-md">
-                ▶️ Démarrer le suivi GPS
+                ▶️ {t('demarrer_suivi_gps')}
               </button>
             )}
           </div>
@@ -302,14 +308,14 @@ export default function MonCamion() {
         {camion.statut === 'en_mission' && (
           <button onClick={handleTerminerMission}
             className="w-full h-12 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center justify-center gap-2 shadow-md">
-            ✓ Mission terminée
+            ✓ {t('mission_terminee')}
           </button>
         )}
 
         {/* Historique des positions */}
         {positions.length > 0 && (
           <div className="bg-white rounded-xl p-5 shadow-sm">
-            <div className="text-sm font-medium text-gray-800 mb-3">📜 Historique récent</div>
+            <div className="text-sm font-medium text-gray-800 mb-3">📜 {t('historique_recent')}</div>
             <div className="flex flex-col gap-2 max-h-96 overflow-y-auto">
               {positions.slice(0, 20).map((p, idx) => (
                 <div key={p.id} className="flex gap-2 pb-2 border-b border-gray-100 last:border-0">

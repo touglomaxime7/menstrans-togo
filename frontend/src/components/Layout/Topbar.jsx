@@ -1,11 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useUI } from '../../context/UIContext';
 import api from '../../api/axios';
+import { Search, X, FolderOpen, Users, FileSignature, Bell } from 'lucide-react';
 
 export default function Topbar({ title, subtitle }) {
   const { utilisateur } = useAuth();
   const navigate        = useNavigate();
+  const { t, lang, toggleLang } = useLanguage();
+  const { toggleSidebar } = useUI();
   const [query,    setQuery]    = useState('');
   const [results,  setResults]  = useState(null);
   const [loading,  setLoading]  = useState(false);
@@ -13,7 +19,7 @@ export default function Topbar({ title, subtitle }) {
   const wrapperRef = useRef(null);
   const timerRef   = useRef(null);
 
-  const today = new Date().toLocaleDateString('fr-FR', {
+  const today = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
   });
 
@@ -90,46 +96,62 @@ export default function Topbar({ title, subtitle }) {
   };
 
   return (
-    <div className="bg-white h-14 px-4 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
-      {/* Titre */}
-      <div className="flex-shrink-0">
-        <div className="text-sm font-medium text-gray-800">{title}</div>
-        <div className="text-[10px] text-gray-400">{subtitle || today}</div>
+    <div className="bg-white h-16 px-5 flex items-center justify-between border-b border-ink-100 flex-shrink-0">
+      {/* Bouton menu (hamburger) + Titre */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <button
+          onClick={toggleSidebar}
+          title={t('etendre_menu')}
+          className="w-9 h-9 flex flex-col items-center justify-center gap-1 rounded-md hover:bg-ink-50 transition-colors flex-shrink-0"
+        >
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
+          <span className="block w-5 h-0.5 bg-ink-500 rounded transition-all"></span>
+        </button>
+        <div>
+          <div className="text-[15px] font-semibold text-ink-800 font-display tracking-tight">{title}</div>
+          <div className="text-[11px] text-ink-400 mt-0.5">{subtitle || today}</div>
+        </div>
       </div>
 
       {/* Barre de recherche globale */}
       <div ref={wrapperRef} className="relative flex-1 max-w-lg mx-6">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+          <Search size={13} strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
             onFocus={() => results && setShowDrop(true)}
-            placeholder="Recherche globale : dossier, client, contrat..."
+            placeholder={t('recherche_globale')}
             className="w-full h-9 pl-8 pr-4 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 bg-gray-50"
           />
           {loading && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-[10px]">
-              ⏳
-            </span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
           )}
           {query && !loading && (
             <button
               onClick={() => { setQuery(''); setResults(null); setShowDrop(false); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs">
-              ✕
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+              <X size={13} strokeWidth={2} />
             </button>
           )}
         </div>
 
         {/* Dropdown résultats */}
+        <AnimatePresence>
         {showDrop && results && (
-          <div className="absolute top-11 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-96 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-11 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-96 overflow-y-auto"
+          >
 
             {totalResultats === 0 ? (
               <div className="px-4 py-6 text-center text-gray-400 text-xs">
-                Aucun résultat pour "<strong>{query}</strong>"
+                {t('aucun_resultat')} "<strong>{query}</strong>"
               </div>
             ) : (
               <div>
@@ -137,7 +159,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.dossiers.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📁 Dossiers ({results.dossiers.length})
+                      <span className="inline-flex items-center gap-1.5"><FolderOpen size={12} strokeWidth={2} />{t('dossiers_label')} ({results.dossiers.length})</span>
                     </div>
                     {results.dossiers.map(d => (
                       <button key={d.id}
@@ -170,7 +192,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.clients.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      👥 Clients ({results.clients.length})
+                      <span className="inline-flex items-center gap-1.5"><Users size={12} strokeWidth={2} />{t('clients_label')} ({results.clients.length})</span>
                     </div>
                     {results.clients.map(c => (
                       <button key={c.id}
@@ -183,7 +205,7 @@ export default function Topbar({ title, subtitle }) {
                           </div>
                         </div>
                         <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full">
-                          Voir profil →
+                          {t('voir_profil')} →
                         </span>
                       </button>
                     ))}
@@ -194,7 +216,7 @@ export default function Topbar({ title, subtitle }) {
                 {results.contrats.length > 0 && (
                   <div>
                     <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wide bg-gray-50 border-b border-gray-100">
-                      📝 Contrats ({results.contrats.length})
+                      <span className="inline-flex items-center gap-1.5"><FileSignature size={12} strokeWidth={2} />{t('contrats_label')} ({results.contrats.length})</span>
                     </div>
                     {results.contrats.map(c => (
                       <button key={c.id}
@@ -222,23 +244,36 @@ export default function Topbar({ title, subtitle }) {
 
                 {/* Footer */}
                 <div className="px-4 py-2 text-[10px] text-gray-400 text-center bg-gray-50 border-t border-gray-100">
-                  {totalResultats} résultat{totalResultats > 1 ? 's' : ''} pour "{query}"
+                  {totalResultats} {t('resultat')}{totalResultats > 1 ? 's' : ''} {lang === 'fr' ? 'pour' : 'for'} "{query}"
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </div>
 
-      {/* Droite : date + notif + avatar */}
+      {/* Droite : langue + date + notif + avatar */}
       <div className="flex items-center gap-3 flex-shrink-0">
+        <motion.button
+          onClick={toggleLang}
+          whileTap={{ scale: 0.9 }}
+          title={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+          className="flex items-center gap-1.5 h-8 px-2.5 rounded-full border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors text-[11px] font-semibold text-gray-600"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-3.5 h-3.5">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+          </svg>
+          {lang.toUpperCase()}
+        </motion.button>
         <div className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-200 hidden sm:block">
           {today}
         </div>
-        <div className="relative cursor-pointer">
-          <span className="text-gray-500 text-sm">🔔</span>
+        <div className="relative cursor-pointer transition-transform hover:scale-110">
+          <Bell size={16} strokeWidth={2} className="text-gray-500" />
         </div>
-        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[9px] font-medium text-blue-800">
+        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[9px] font-medium text-blue-800 transition-transform hover:scale-110 ring-2 ring-transparent hover:ring-blue-200">
           {initiales}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
@@ -12,6 +13,7 @@ const BADGE_STATUT = {
 };
 
 export default function Transit() {
+  const { t } = useLanguage();
   const [declarations, setDeclarations] = useState([]);
   const [etudes,       setEtudes]       = useState([]);
   const [loading,      setLoading]      = useState(true);
@@ -140,7 +142,7 @@ export default function Transit() {
   };
 
   return (
-    <Layout title="Service Transit" subtitle="Déclarations douanières et études de valeur">
+    <Layout title={t('transit_titre')} subtitle={t('transit_soustitre')}>
       <div className="flex flex-col gap-4">
           {/* Tableau de bord */}
         <TableauBordSection statuts={['transit']} titre="Transit" />
@@ -160,40 +162,40 @@ export default function Transit() {
           <div className="flex gap-2">
             <button onClick={() => setShowEtudeModal(true)}
               className="h-8 px-3 border border-gray-200 rounded-md text-xs text-gray-600 hover:bg-gray-50">
-              + Nouvelle étude
+              {t('nouvelle_etude')}
             </button>
             <button onClick={() => setShowModal(true)}
-              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-              + Nouvelle déclaration
+              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+              {t('nouvelle_declaration')}
             </button>
           </div>
         </div>
 
         {/* Contenu */}
         {loading ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">
-            Chargement...
+          <div className="elegant-card p-10 text-center text-ink-400 text-sm">
+            {t('chargement')}
           </div>
         ) : activeTab === 'declarations' ? (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Liste des déclarations</span>
               <span className="text-[10px] text-gray-400">{declarations.length} déclaration(s)</span>
             </div>
             {declarations.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">Aucune déclaration</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_declaration')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Déclaration</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Navire</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date arrivée</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Total</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('numero_declaration')}</th>
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">{t('navire')}</th>
+                    <th className="elegant-th">{t('date_arrivee')}</th>
+                    <th className="elegant-th">DTD</th>
+                    <th className="elegant-th">{t('total')}</th>
+                    <th className="elegant-th">{t('statut_label')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -233,23 +235,23 @@ export default function Transit() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Études de valeur</span>
               <span className="text-[10px] text-gray-400">{etudes.length} étude(s)</span>
             </div>
             {etudes.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">Aucune étude de valeur</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_etude_valeur')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Complément Direction</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Approuvé client</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">DTD</th>
+                    <th className="elegant-th">{t('complement_direction')}</th>
+                    <th className="elegant-th">{t('approuve_client')}</th>
+                    <th className="elegant-th">{t('date')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -297,9 +299,9 @@ export default function Transit() {
       {/* Modal nouvelle déclaration (inchangé) */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">Nouvelle déclaration douanière</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouvelle_declaration_titre')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <div className="px-5 pt-3">
@@ -322,7 +324,7 @@ export default function Transit() {
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Nom du navire <span className="text-red-500">*</span></label>
                   <input value={form.nom_navire} onChange={(e) => setForm({...form, nom_navire: e.target.value})}
-                    placeholder="ex: MSC TOGO" className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
+                    placeholder={t('navire_placeholder')} className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Date d'arrivée <span className="text-red-500">*</span></label>
@@ -347,9 +349,9 @@ export default function Transit() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Créer la déclaration
                 </button>
               </div>
@@ -363,7 +365,7 @@ export default function Transit() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[440px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">Nouvelle étude de valeur</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouvelle_etude_titre')}</span>
               <button onClick={() => setShowEtudeModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <div className="px-5 pt-3">
@@ -386,14 +388,14 @@ export default function Transit() {
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Montant DTD (FCFA) <span className="text-red-500">*</span></label>
                 <input type="number" value={etudeForm.droit_taxe_douane}
                   onChange={(e) => setEtudeForm({...etudeForm, droit_taxe_douane: e.target.value})}
-                  placeholder="Droit de Taxe Douane"
+                  placeholder={t('dtd_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowEtudeModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Enregistrer le DTD
                 </button>
               </div>

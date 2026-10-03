@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ const BADGE_STATUT = {
 };
 
 export default function SuiviCamions() {
+  const { t } = useLanguage();
   const [camions,    setCamions]    = useState([]);
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -122,7 +124,7 @@ export default function SuiviCamions() {
   );
 
   return (
-    <Layout title="Suivi des Camions" subtitle="Position et mission en temps réel">
+    <Layout title={t('suivi_camions_titre')} subtitle={t('position_mission_temps_reel')}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}
@@ -212,25 +214,25 @@ export default function SuiviCamions() {
         )}
 
         {/* Tous les camions */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">Tous les camions</span>
             <span className="text-[10px] text-gray-400">{camions.length} camion(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : camions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun camion</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_camion')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Immat.</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Chauffeur</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mission</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Position</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">{t('immat_court')}</th>
+                  <th className="elegant-th">{t('chauffeur')}</th>
+                  <th className="elegant-th">{t('statut_label')}</th>
+                  <th className="elegant-th">{t('mission')}</th>
+                  <th className="elegant-th">{t('position')}</th>
+                  <th className="elegant-th">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -272,7 +274,7 @@ export default function SuiviCamions() {
       {/* Modal Affecter */}
       {showAffectModal && selectedCamion && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">
                 Affecter le camion {selectedCamion.immatriculation}
@@ -293,20 +295,20 @@ export default function SuiviCamions() {
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Marchandise transportée *</label>
                 <textarea value={affectForm.marchandise} onChange={(e) => setAffectForm({...affectForm, marchandise: e.target.value})}
-                  placeholder="ex: 50 cartons de matériel électronique"
+                  placeholder={t('marchandise_placeholder')}
                   className="border border-gray-200 rounded-md px-3 py-2 text-xs outline-none focus:border-blue-400 h-16 resize-none"/>
               </div>
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Destination *</label>
                 <input value={affectForm.destination} onChange={(e) => setAffectForm({...affectForm, destination: e.target.value})}
-                  placeholder="ex: Entrepôt Lomé Zone Industrielle"
+                  placeholder={t('entrepot_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowAffectModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">Annuler</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Affecter
                 </button>
               </div>
@@ -318,7 +320,7 @@ export default function SuiviCamions() {
       {/* Modal Position */}
       {showPositionModal && selectedCamion && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-[480px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <span className="text-sm font-medium text-gray-800">
                 Mettre à jour la position - {selectedCamion.immatriculation}
@@ -329,7 +331,7 @@ export default function SuiviCamions() {
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Position actuelle *</label>
                 <input value={positionForm.position} onChange={(e) => setPositionForm({...positionForm, position: e.target.value})}
-                  placeholder="ex: Sur la route nationale 1, près d'Aného"
+                  placeholder={t('route_placeholder')}
                   className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -357,9 +359,9 @@ export default function SuiviCamions() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowPositionModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">Annuler</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Mettre à jour
                 </button>
               </div>
@@ -380,7 +382,7 @@ export default function SuiviCamions() {
             </div>
             <div className="p-5 max-h-[500px] overflow-y-auto">
               {positions.length === 0 ? (
-                <div className="text-center text-gray-400 text-sm py-8">Aucune position enregistrée</div>
+                <div className="text-center text-gray-400 text-sm py-8">{t('aucune_position_enregistree')}</div>
               ) : (
                 <div className="flex flex-col gap-3">
                   {positions.map((p, idx) => (

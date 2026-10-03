@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
 export default function EtudesDirection() {
+  const { t } = useLanguage();
   const [etudes,    setEtudes]    = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -87,8 +89,8 @@ export default function EtudesDirection() {
 
   return (
     <Layout
-      title="Direction — Études de valeur"
-      subtitle="Complément des frais confidentiels"
+      title={t('etudes_direction_titre')}
+      subtitle={t('etudes_direction_soustitre')}
     >
       <div className="flex flex-col gap-4">
 
@@ -96,28 +98,28 @@ export default function EtudesDirection() {
           🔒 Cette page est réservée à la Direction. Vous y voyez les études de valeur saisies par le Service Transit (DTD uniquement) et vous pouvez compléter les frais confidentiels (transit, manutention, portuaires, autres).
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">Liste complète des études de valeur</span>
             <span className="text-[10px] text-gray-400">{etudes.length} étude(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : etudes.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucune étude de valeur</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_etude_valeur')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">DTD</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Transit</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Manutention</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Portuaires</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Autres</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Total</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">État</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">{t('dossier')}</th>
+                  <th className="elegant-th">DTD</th>
+                  <th className="elegant-th">{t('transit_titre')}</th>
+                  <th className="elegant-th">{t('manutention')}</th>
+                  <th className="elegant-th">{t('portuaires')}</th>
+                  <th className="elegant-th">{t('autres')}</th>
+                  <th className="elegant-th">{t('total')}</th>
+                  <th className="elegant-th">{t('etat')}</th>
+                  <th className="elegant-th">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,7 +148,7 @@ export default function EtudesDirection() {
                       <td className="px-3 py-2">
                         <button onClick={() => ouvrirCompletement(e)}
                           className="h-6 px-2 bg-blue-50 text-blue-700 rounded text-[10px] border border-blue-200 hover:bg-blue-100">
-                          {complete ? 'Modifier' : 'Compléter'}
+                          {complete ? t('modifier_action') : t('completer')}
                         </button>
                       </td>
                     </tr>
@@ -161,30 +163,30 @@ export default function EtudesDirection() {
       {/* Modal de complétement */}
       {showModal && etudeActive && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[520px] border border-gray-200 shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-[520px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
               <div>
                 <div className="text-sm font-medium text-gray-800">
-                  Complément des frais — Dossier {etudeActive.dossier_numero || etudeActive.dossier}
+                  {t('complement_frais_dossier')} {etudeActive.dossier_numero || etudeActive.dossier}
                 </div>
                 <div className="text-[10px] text-gray-400 mt-0.5">
-                  DTD déjà saisi : {parseFloat(etudeActive.droit_taxe_douane).toLocaleString('fr-FR')} F
+                  {t('dtd_deja_saisi')} : {parseFloat(etudeActive.droit_taxe_douane).toLocaleString('fr-FR')} F
                 </div>
               </div>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <div className="px-5 pt-3">
               <div className="bg-blue-50 border border-blue-200 rounded-md p-2 text-[10px] text-blue-700">
-                ℹ️ Renseignez les frais confidentiels. Ces montants ne sont visibles que par la Direction.
+                ℹ️ {t('frais_confidentiels_info')}
               </div>
             </div>
             <form onSubmit={handleCompleter} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { key: 'frais_transit',     label: 'Frais transit (FCFA)' },
-                  { key: 'frais_manutention', label: 'Manutention (FCFA)' },
-                  { key: 'frais_portuaires',  label: 'Frais portuaires (FCFA)' },
-                  { key: 'autres_frais',      label: 'Autres frais (FCFA)' },
+                  { key: 'frais_transit',     label: t('frais_transit_fcfa') },
+                  { key: 'frais_manutention', label: t('manutention_fcfa') },
+                  { key: 'frais_portuaires',  label: t('frais_portuaires_fcfa') },
+                  { key: 'autres_frais',      label: t('autres_frais_fcfa') },
                 ].map((f) => (
                   <div key={f.key} className="flex flex-col gap-1">
                     <label className="text-[10px] font-medium text-gray-500 uppercase">
@@ -199,7 +201,7 @@ export default function EtudesDirection() {
 
               {/* Total calculé */}
               <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-center justify-between">
-                <span className="text-[11px] text-blue-700 font-medium">Total étude de valeur</span>
+                <span className="text-[11px] text-blue-700 font-medium">{t('total_etude_valeur')}</span>
                 <span className="text-base font-bold text-blue-800">
                   {totalSaisie.toLocaleString('fr-FR')} FCFA
                 </span>
@@ -207,10 +209,10 @@ export default function EtudesDirection() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-                  Enregistrer
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+                  {t('enregistrer')}
                 </button>
               </div>
             </form>

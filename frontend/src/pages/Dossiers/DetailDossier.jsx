@@ -6,6 +6,7 @@ import RecapitulatifDossier from './RecapitulatifDossier';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const BADGE = {
   nouveau:            'bg-purple-100 text-purple-800',
@@ -61,6 +62,7 @@ const WORKFLOW_ANNULER = {
 };
 
 export default function DetailDossier() {
+  const { t } = useLanguage();
   const { id }          = useParams();
   const navigate        = useNavigate();
   const { utilisateur } = useAuth();
@@ -175,8 +177,8 @@ export default function DetailDossier() {
     WORKFLOW_ANNULER[dossier.statut].roles.includes(utilisateur.role);
 
   if (loading) return (
-    <Layout title="Chargement...">
-      <div className="flex items-center justify-center h-40 text-gray-400 text-sm">Chargement...</div>
+    <Layout title={t('chargement')}>
+      <div className="flex items-center justify-center h-40 text-gray-400 text-sm">{t('chargement')}</div>
     </Layout>
   );
   if (!dossier) return null;
@@ -185,7 +187,7 @@ export default function DetailDossier() {
   const conteneur   = dossier.conteneur;
 
   return (
-    <Layout title={`Dossier ${dossier.numero_dossier}`}
+    <Layout title={`${t('numero_dossier').replace('N° ', '')} ${dossier.numero_dossier}`}
       subtitle={`${dossier.client_nom} · ${dossier.type_transport}`}>
       <div className="flex flex-col gap-4">
 
@@ -220,7 +222,7 @@ export default function DetailDossier() {
         </div>
 
         {/* Header */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="elegant-card p-4">
           <div className="flex items-start justify-between mb-3">
             <div>
               <div className="text-lg font-medium text-gray-800">{dossier.numero_dossier}</div>
@@ -333,7 +335,7 @@ export default function DetailDossier() {
         )}
 
         {/* Documents */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-800">📄 Documents du dossier</span>
@@ -347,19 +349,19 @@ export default function DetailDossier() {
             </button>
           </div>
           {documents.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun document associé à ce dossier</div>
+            <div className="p-10 text-center text-ink-400 text-sm">Aucun document associé à ce dossier</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Code</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Nom fichier</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Taille</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Assigné à</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">Code</th>
+                  <th className="elegant-th">Type</th>
+                  <th className="elegant-th">Nom fichier</th>
+                  <th className="elegant-th">Taille</th>
+                  <th className="elegant-th">Statut</th>
+                  <th className="elegant-th">Assigné à</th>
+                  <th className="elegant-th">Date</th>
+                  <th className="elegant-th">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -393,7 +395,7 @@ export default function DetailDossier() {
 
         {/* Grille infos */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Informations client</span>
             </div>
@@ -414,7 +416,7 @@ export default function DetailDossier() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Observations</span>
             </div>
@@ -425,7 +427,7 @@ export default function DetailDossier() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100">
               <span className="text-xs font-medium text-gray-800">Actions rapides</span>
             </div>

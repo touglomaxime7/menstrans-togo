@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -11,6 +12,7 @@ const BADGE_STATUT = {
 };
 
 export default function Camions() {
+  const { t } = useLanguage();
   const [camions,    setCamions]    = useState([]);
   const [chauffeurs, setChauffeurs] = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -125,16 +127,16 @@ export default function Camions() {
   };
 
   return (
-    <Layout title="Gestion des Camions" subtitle={`${stats.total} camions dans le parc`}>
+    <Layout title={t('camions_titre')} subtitle={`${stats.total} ${t('camions_dans_parc')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-3">
           {[
-            { label: 'Total',          value: stats.total,          bg: 'bg-gray-50',   color: 'text-gray-700' },
-            { label: 'Disponibles',    value: stats.disponibles,    bg: 'bg-green-50',  color: 'text-green-700' },
-            { label: 'En mission',     value: stats.en_mission,     bg: 'bg-blue-50',   color: 'text-blue-700' },
-            { label: 'En maintenance', value: stats.en_maintenance, bg: 'bg-amber-50',  color: 'text-amber-700' },
+            { label: t('total'),          value: stats.total,          bg: 'bg-gray-50',   color: 'text-gray-700' },
+            { label: t('disponibles'),    value: stats.disponibles,    bg: 'bg-green-50',  color: 'text-green-700' },
+            { label: t('en_mission'),     value: stats.en_mission,     bg: 'bg-blue-50',   color: 'text-blue-700' },
+            { label: t('en_maintenance'), value: stats.en_maintenance, bg: 'bg-amber-50',  color: 'text-amber-700' },
           ].map((s) => (
             <div key={s.label} className={`${s.bg} rounded-lg p-3 border border-gray-200`}>
               <div className="text-[10px] text-gray-400 mb-1">{s.label}</div>
@@ -146,33 +148,33 @@ export default function Camions() {
         {/* Toolbar */}
         <div className="flex justify-end">
           <button onClick={() => { setSelected(null); setShowModal(true); }}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Ajouter un camion
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+            {t('ajouter_un_camion')}
           </button>
         </div>
 
         {/* Tableau */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-xs font-medium text-gray-800">Parc de camions</span>
+            <span className="text-xs font-medium text-gray-800">{t('parc_de_camions')}</span>
             <span className="text-[10px] text-gray-400">{camions.length} camion(s)</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : camions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun camion enregistré</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_camion_enregistre')}</div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Immatriculation</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Marque / Modèle</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Capacité</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Chauffeur attitré</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Téléphone</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                  <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                <tr className="bg-ink-50 border-b border-ink-100">
+                  <th className="elegant-th">{t('immatriculation')}</th>
+                  <th className="elegant-th">{t('marque_modele')}</th>
+                  <th className="elegant-th">{t('type')}</th>
+                  <th className="elegant-th">{t('capacite')}</th>
+                  <th className="elegant-th">{t('chauffeur_attitre')}</th>
+                  <th className="elegant-th">{t('telephone')}</th>
+                  <th className="elegant-th">{t('statut_label')}</th>
+                  <th className="elegant-th">{t('actions_label')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -234,7 +236,7 @@ export default function Camions() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[520px] border border-gray-200 shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl w-[520px] border border-gray-200 shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
                 {selected ? 'Modifier le camion' : 'Ajouter un camion'}
@@ -249,7 +251,7 @@ export default function Camions() {
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Immatriculation *</label>
                   <input value={form.immatriculation}
                     onChange={(e) => setForm({...form, immatriculation: e.target.value})}
-                    placeholder="ex: TG 4892 LM"
+                    placeholder={t('immat_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -269,14 +271,14 @@ export default function Camions() {
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Marque</label>
                   <input value={form.marque}
                     onChange={(e) => setForm({...form, marque: e.target.value})}
-                    placeholder="ex: Mercedes"
+                    placeholder={t('marque_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Modèle</label>
                   <input value={form.modele}
                     onChange={(e) => setForm({...form, modele: e.target.value})}
-                    placeholder="ex: Actros 2545"
+                    placeholder={t('modele_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -309,7 +311,7 @@ export default function Camions() {
                   <select value={form.chauffeur || ''}
                     onChange={(e) => handleChauffeurChange(e.target.value)}
                     className="h-9 border border-gray-200 rounded-md px-2 text-xs outline-none focus:border-blue-400">
-                    <option value="">— Aucun compte chauffeur lié —</option>
+                    <option value="">{t('aucun_compte_chauffeur')}</option>
                     {chauffeurs.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.prenom} {c.nom} ({c.email})
@@ -318,7 +320,7 @@ export default function Camions() {
                   </select>
                   {chauffeurs.length === 0 && (
                     <span className="text-[10px] text-amber-600 mt-1">
-                      ⚠️ Aucun compte chauffeur n'est encore créé. Vous pouvez en créer dans le menu Utilisateurs.
+                      {t('aucun_compte_chauffeur_avert')}
                     </span>
                   )}
                 </div>
@@ -328,14 +330,14 @@ export default function Camions() {
                     <label className="text-[10px] font-medium text-gray-500 uppercase">Nom (affichage)</label>
                     <input value={form.nom_chauffeur}
                       onChange={(e) => setForm({...form, nom_chauffeur: e.target.value})}
-                      placeholder="Pré-rempli si compte sélectionné"
+                      placeholder={t('prerempli_placeholder')}
                       className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] font-medium text-gray-500 uppercase">Téléphone</label>
                     <input value={form.telephone_chauffeur}
                       onChange={(e) => setForm({...form, telephone_chauffeur: e.target.value})}
-                      placeholder="+228 XX XX XX XX"
+                      placeholder={t('telephone_placeholder')}
                       className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                   </div>
                 </div>
@@ -351,9 +353,9 @@ export default function Camions() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   {selected ? 'Mettre à jour' : 'Ajouter'}
                 </button>
               </div>

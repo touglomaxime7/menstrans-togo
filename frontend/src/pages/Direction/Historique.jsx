@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { getDossiers, getRecapitulatif } from '../../api/dossiers';
 import { toast } from 'react-toastify';
 
@@ -36,6 +37,7 @@ const TYPE_COLOR = {
 };
 
 export default function Historique() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [dossiers,   setDossiers]   = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -83,7 +85,7 @@ export default function Historique() {
   });
 
   return (
-    <Layout title="Historique des dossiers" subtitle="Vue directeur — Suivi complet">
+    <Layout title={t('historique_titre')} subtitle={t('vue_directeur_suivi')}>
       <div className="flex gap-4 h-full">
 
         {/* Colonne gauche — Liste des dossiers */}
@@ -93,7 +95,7 @@ export default function Historique() {
           <div className="relative">
             <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
             <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Rechercher un dossier..."
+              placeholder={t('rechercher_dossier_placeholder')}
               className="w-full h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none focus:border-blue-400"/>
           </div>
 
@@ -113,9 +115,9 @@ export default function Historique() {
           {/* Liste */}
           <div className="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-220px)]">
             {loading ? (
-              <div className="text-center text-gray-400 text-xs py-8">Chargement...</div>
+              <div className="text-center text-gray-400 text-xs py-8">{t('chargement')}</div>
             ) : filtered.length === 0 ? (
-              <div className="text-center text-gray-400 text-xs py-8">Aucun dossier</div>
+              <div className="text-center text-gray-400 text-xs py-8">{t('aucun_dossier')}</div>
             ) : (
               filtered.map(d => (
                 <div key={d.id}
@@ -189,10 +191,10 @@ export default function Historique() {
               {/* Corps — Timeline */}
               <div className="flex-1 overflow-y-auto p-5">
                 {loadRecap ? (
-                  <div className="text-center text-gray-400 text-sm py-8">Chargement de l'historique...</div>
+                  <div className="text-center text-gray-400 text-sm py-8">{t('chargement_historique')}</div>
                 ) : !recap ? null : recap.historique?.length === 0 ? (
                   <div className="text-center text-gray-400 text-sm py-8">
-                    Aucune activité enregistrée pour ce dossier
+                    {t('aucune_activite')}
                   </div>
                 ) : (
                   <div>

@@ -5,6 +5,7 @@ import { getDossiers, getClients, createDossier, createClient } from '../../api/
 import { createConteneur } from '../../api/contrats';
 import ComboBox from '../../components/ComboBox';
 import { toast } from 'react-toastify';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 const BADGE = {
   nouveau:            'bg-purple-100 text-purple-800',
@@ -63,6 +64,7 @@ const MODES_SORTIE = [
 const CLASSIFICATIONS = ['État', 'Urgent', 'VIP', 'Contentieux'];
 
 export default function ListeDossiers() {
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const [dossiers,        setDossiers]        = useState([]);
   const [clients,         setClients]         = useState([]);
@@ -124,8 +126,12 @@ export default function ListeDossiers() {
 
   useEffect(() => {
     const fetchClients = async () => {
-      const res = await getClients();
-      setClients(res.data.results || res.data);
+      try {
+        const res = await getClients();
+        setClients(res.data.results || res.data);
+      } catch {
+        toast.error('Erreur lors du chargement des clients');
+      }
     };
     fetchClients();
   }, []);
@@ -137,7 +143,7 @@ export default function ListeDossiers() {
     setClientSearch(val);
     if (val.length > 0) {
       setClientSuggestions(
-        clients.filter(c => c.nom.toLowerCase().includes(val.toLowerCase())).slice(0, 5)
+        clients.filter(c => (c.nom || '').toLowerCase().includes(val.toLowerCase())).slice(0, 5)
       );
     } else {
       setClientSuggestions([]);
@@ -165,11 +171,13 @@ export default function ListeDossiers() {
 
     const typeTransportMap = {
       'maritime': 'maritime', 'Maritime': 'maritime',
-      'aerien': 'aerien', 'Aérien': 'aerien',
+      'aerien': 'aerien', 'aérien': 'aerien', 'Aérien': 'aerien',
       'terrestre': 'terrestre', 'Terrestre': 'terrestre',
     };
+    // "État" est le libellé affiché pour la valeur backend "standard"
     const classifMap = {
       'standard': 'standard', 'Standard': 'standard',
+      'état': 'standard', 'État': 'standard', 'etat': 'standard',
       'urgent': 'urgent', 'Urgent': 'urgent',
       'vip': 'vip', 'VIP': 'vip',
       'contentieux': 'contentieux', 'Contentieux': 'contentieux',
@@ -240,9 +248,10 @@ export default function ListeDossiers() {
     }
   };
 
+  const q = search.toLowerCase();
   let filtered = dossiers.filter(d =>
-    d.numero_dossier.toLowerCase().includes(search.toLowerCase()) ||
-    d.client_nom.toLowerCase().includes(search.toLowerCase())
+    (d.numero_dossier || '').toLowerCase().includes(q) ||
+    (d.client_nom || '').toLowerCase().includes(q)
   );
   if (activeTab === 'logistique') {
     filtered = filtered.filter(d =>
@@ -251,7 +260,7 @@ export default function ListeDossiers() {
   }
 
   return (
-    <Layout title="Gestion des Dossiers" subtitle={`${dossiers.length} dossiers au total`}>
+    <Layout title={t('dossiers_titre')} subtitle={`${dossiers.length} ${t('dossiers_titre').toLowerCase()} ${lang === 'en' ? 'total' : 'au total'}`}>
       <div className="flex flex-col gap-3">
 
         {/* Toolbar */}
@@ -260,7 +269,7 @@ export default function ListeDossiers() {
             <div className="relative">
               <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
               <input value={search} onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher un dossier, client..."
+                placeholder={t('rechercher_dossier')}
                 className="h-8 pl-7 pr-3 border border-gray-200 rounded-md text-xs outline-none w-52 focus:border-blue-400"/>
             </div>
             <select value={transport} onChange={(e) => setTransport(e.target.value)}
@@ -284,7 +293,7 @@ export default function ListeDossiers() {
               className="h-8 border border-gray-200 rounded-md text-xs px-2 outline-none"/>
             <button type="submit"
               className="h-8 px-3 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-              Rechercher
+              {t('rechercher')}
             </button>
             <button type="button"
               onClick={() => { setSearch(''); setTransport(''); setClassification(''); setDateDebut(''); setDateFin(''); setStatut(''); setActiveTab(''); }}
@@ -293,8 +302,8 @@ export default function ListeDossiers() {
             </button>
           </form>
           <button onClick={() => { resetModal(); setShowModal(true); }}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouveau dossier
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+            {t('nouveau_dossier')}
           </button>
         </div>
 
@@ -311,30 +320,30 @@ export default function ListeDossiers() {
         </div>
 
         {/* Tableau */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="elegant-card overflow-hidden">
           <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
             <span className="text-xs font-medium text-gray-800">Liste des dossiers</span>
             <span className="text-[10px] text-gray-400">{filtered.length} dossier{filtered.length > 1 ? 's' : ''}</span>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Chargement...</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-sm">Aucun dossier trouvé</div>
+            <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_dossier')}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Client</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Conteneur</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Conteneur</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Classification</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mode sortie</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date début</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('numero_dossier')}</th>
+                    <th className="elegant-th">{t('client')}</th>
+                    <th className="elegant-th">{t('type')}</th>
+                    <th className="elegant-th">{t('conteneur')}</th>
+                    <th className="elegant-th">{lang === 'en' ? 'Container No.' : 'N° Conteneur'}</th>
+                    <th className="elegant-th">{t('classification')}</th>
+                    <th className="elegant-th">{t('mode_sortie')}</th>
+                    <th className="elegant-th">{t('statut_label')}</th>
+                    <th className="elegant-th">{t('date_debut')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -390,7 +399,7 @@ export default function ListeDossiers() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[560px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
-              <span className="text-sm font-medium text-gray-800">Nouveau dossier</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouveau_dossier')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <form onSubmit={handleCreateDossier} className="p-5 flex flex-col gap-4">
@@ -531,10 +540,10 @@ export default function ListeDossiers() {
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-medium text-gray-500 uppercase">Classification</label>
                 <ComboBox
-                  value={form.classification}
-                  onChange={(val) => setForm({ ...form, classification: val.toLowerCase() })}
+                  value={CLASSIF_LABEL[form.classification] || form.classification}
+                  onChange={(val) => setForm({ ...form, classification: val })}
                   options={CLASSIFICATIONS}
-                  placeholder="Standard, Urgent, VIP..."
+                  placeholder="État, Urgent, VIP..."
                 />
               </div>
 
@@ -560,11 +569,11 @@ export default function ListeDossiers() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500 hover:bg-gray-50">
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">
                   Annuler
                 </button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Créer le dossier
                 </button>
               </div>
@@ -600,9 +609,9 @@ export default function ListeDossiers() {
               ))}
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowClientModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">Annuler</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Créer le client
                 </button>
               </div>

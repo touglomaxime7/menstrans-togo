@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import TableauBordSection from '../../components/TableauBordSection';
 import ComboBox from '../../components/ComboBox';
 import api from '../../api/axios';
@@ -33,6 +34,7 @@ const STATUTS_PAIEMENT = ['Payé', 'En attente'];
 const STATUTS_PAIEMENT_MAP = { 'Payé': 'paye', 'En attente': 'en_attente' };
 
 export default function Finance() {
+  const { t } = useLanguage();
   const [montants,      setMontants]      = useState([]);
   const [factures,      setFactures]      = useState([]);
   const [bilan,         setBilan]         = useState(null);
@@ -138,7 +140,7 @@ export default function Finance() {
   const montantTTC = parseFloat(factForm.montant_ht || 0) * (1 + parseFloat(factForm.tva || 0) / 100);
 
   return (
-    <Layout title="Caisse & Comptabilité" subtitle="Gestion des montants et factures">
+    <Layout title={t('finance_titre')} subtitle={t('finance_soustitre')}>
       <div className="flex flex-col gap-4">
 
         {/* Tableau de bord */}
@@ -149,7 +151,7 @@ export default function Finance() {
 
         {/* Bilan */}
         {bilan && (
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="elegant-card p-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-medium text-gray-800">Bilan financier</span>
               <div className="flex gap-1 bg-gray-50 rounded-lg p-1 border border-gray-200">
@@ -200,38 +202,38 @@ export default function Finance() {
           <div className="flex gap-2">
             <button onClick={() => setShowFactModal(true)}
               className="h-8 px-3 border border-gray-200 rounded-md text-xs text-gray-600 hover:bg-gray-50">
-              + Nouvelle facture
+              {t('nouvelle_facture')}
             </button>
             <button onClick={() => setShowModal(true)}
-              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-              + Nouveau montant
+              className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+              {t('nouveau_montant')}
             </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">Chargement...</div>
+          <div className="elegant-card p-10 text-center text-ink-400 text-sm">{t('chargement')}</div>
         ) : activeTab === 'montants' ? (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Montants enregistrés</span>
               <span className="text-[10px] text-gray-400">{montants.length} montant(s)</span>
             </div>
             {montants.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">Aucun montant enregistré</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucun_montant')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Libellé</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Débours</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Facturé</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Total</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Mode</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Date</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">{t('type')}</th>
+                    <th className="elegant-th">{t('libelle')}</th>
+                    <th className="elegant-th">{t('debours')}</th>
+                    <th className="elegant-th">{t('facture')}</th>
+                    <th className="elegant-th">{t('total')}</th>
+                    <th className="elegant-th">{t('mode')}</th>
+                    <th className="elegant-th">{t('statut_label')}</th>
+                    <th className="elegant-th">{t('date')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -259,25 +261,25 @@ export default function Finance() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="elegant-card overflow-hidden">
             <div className="px-4 py-2.5 border-b border-gray-100 flex items-center justify-between">
               <span className="text-xs font-medium text-gray-800">Factures</span>
               <span className="text-[10px] text-gray-400">{factures.length} facture(s)</span>
             </div>
             {factures.length === 0 ? (
-              <div className="p-8 text-center text-gray-400 text-sm">Aucune facture</div>
+              <div className="p-10 text-center text-ink-400 text-sm">{t('aucune_facture')}</div>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100">
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">N° Facture</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Dossier</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">HT</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">TVA</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">TTC</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Statut</th>
-                    <th className="px-3 py-2 text-left text-[10px] text-gray-400 font-medium uppercase">Actions</th>
+                  <tr className="bg-ink-50 border-b border-ink-100">
+                    <th className="elegant-th">{t('numero_facture')}</th>
+                    <th className="elegant-th">{t('dossier')}</th>
+                    <th className="elegant-th">{t('type')}</th>
+                    <th className="elegant-th">{t('montant_ht')}</th>
+                    <th className="elegant-th">{t('tva')}</th>
+                    <th className="elegant-th">{t('ttc')}</th>
+                    <th className="elegant-th">{t('statut_label')}</th>
+                    <th className="elegant-th">{t('actions_label')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -318,7 +320,7 @@ export default function Finance() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[500px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">Nouveau montant</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouveau_montant').replace('+ ', '')}</span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <form onSubmit={handleCreateMontant} className="p-5 flex flex-col gap-3">
@@ -334,7 +336,7 @@ export default function Finance() {
                       setForm({ ...form, dossier: found ? String(found.id) : '', dossier_label: val });
                     }}
                     options={dossierOptions}
-                    placeholder="Rechercher un dossier ou un client..."
+                    placeholder={t('rechercher_dossier_ou_client')}
                   />
                 </div>
 
@@ -345,7 +347,7 @@ export default function Finance() {
                     value={form.type_montant_label}
                     onChange={(val) => setForm({ ...form, type_montant_label: val })}
                     options={TYPES_MONTANT}
-                    placeholder="Banque, DFU, Douane..."
+                    placeholder={t('banque_placeholder')}
                   />
                 </div>
 
@@ -353,7 +355,7 @@ export default function Finance() {
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Libellé *</label>
                   <input value={form.libelle} onChange={(e) => setForm({...form, libelle: e.target.value})}
-                    placeholder="Description du paiement"
+                    placeholder={t('libelle_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
 
@@ -380,7 +382,7 @@ export default function Finance() {
                     value={form.mode_paiement_label}
                     onChange={(val) => setForm({ ...form, mode_paiement_label: val })}
                     options={MODES_PAIEMENT}
-                    placeholder="Espèces, Virement..."
+                    placeholder={t('mode_placeholder')}
                   />
                 </div>
 
@@ -391,16 +393,16 @@ export default function Finance() {
                     value={form.statut_paiement_label}
                     onChange={(val) => setForm({ ...form, statut_paiement_label: val })}
                     options={STATUTS_PAIEMENT}
-                    placeholder="Payé, En attente..."
+                    placeholder={t('statut_placeholder')}
                   />
                 </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Enregistrer
                 </button>
               </div>
@@ -414,7 +416,7 @@ export default function Finance() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
           <div className="bg-white rounded-xl w-[460px] border border-gray-200 shadow-xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-800">Nouvelle facture</span>
+              <span className="text-sm font-medium text-gray-800">{t('nouvelle_facture').replace('+ ', '')}</span>
               <button onClick={() => setShowFactModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
             <form onSubmit={handleCreateFacture} className="p-5 flex flex-col gap-3">
@@ -430,7 +432,7 @@ export default function Finance() {
                       setFactForm({ ...factForm, dossier: found ? String(found.id) : '', dossier_label: val });
                     }}
                     options={dossierOptions}
-                    placeholder="Rechercher un dossier ou un client..."
+                    placeholder={t('rechercher_dossier_ou_client')}
                   />
                 </div>
 
@@ -441,7 +443,7 @@ export default function Finance() {
                     value={factForm.type_facture_label}
                     onChange={(val) => setFactForm({ ...factForm, type_facture_label: val })}
                     options={TYPES_FACTURE}
-                    placeholder="Émise ou Reçue..."
+                    placeholder={t('emise_recue_placeholder')}
                   />
                 </div>
 
@@ -449,7 +451,7 @@ export default function Finance() {
                 <div className="flex flex-col gap-1 col-span-2">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Émetteur</label>
                   <input value={factForm.emetteur} onChange={(e) => setFactForm({...factForm, emetteur: e.target.value})}
-                    placeholder="Nom de l'émetteur"
+                    placeholder={t('emetteur_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
 
@@ -480,9 +482,9 @@ export default function Finance() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowFactModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   Enregistrer
                 </button>
               </div>

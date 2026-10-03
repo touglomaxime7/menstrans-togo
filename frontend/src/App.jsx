@@ -3,6 +3,8 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import store                from './store';
+import { LanguageProvider } from './i18n/LanguageContext';
+import { UIProvider }       from './context/UIContext';
 import ProtectedRoute       from './components/ProtectedRoute';
 import SplashScreen         from './pages/SplashScreen';
 import Login                from './pages/Login';
@@ -32,6 +34,8 @@ import Historique from './pages/Direction/Historique';
 export default function App() {
   return (
     <Provider store={store}>
+      <LanguageProvider>
+      <UIProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SplashScreen />} />
@@ -107,6 +111,8 @@ export default function App() {
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} theme="light" />
       </BrowserRouter>
+      </UIProvider>
+      </LanguageProvider>
     </Provider>
   );
 }

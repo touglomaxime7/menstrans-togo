@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
+import { useLanguage } from '../../i18n/LanguageContext';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 
@@ -27,6 +28,7 @@ const ROLES = [
 ];
 
 export default function Utilisateurs() {
+  const { t } = useLanguage();
   const [users,     setUsers]     = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -126,26 +128,26 @@ export default function Utilisateurs() {
   const initiales = (u) => `${u.prenom?.[0] || ''}${u.nom?.[0] || ''}`.toUpperCase();
 
   return (
-    <Layout title="Gestion des Utilisateurs" subtitle={`${users.length} comptes`}>
+    <Layout title={t('utilisateurs_titre')} subtitle={`${users.length} ${t('comptes_suffix')}`}>
       <div className="flex flex-col gap-4">
 
         {/* Toolbar */}
         <div className="flex justify-end">
           <button onClick={() => { setSelected(null); setForm({ nom: '', prenom: '', email: '', role: 'transit', password: '', actif: true }); setShowModal(true); }}
-            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
-            + Nouveau compte
+            className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
+            {t('nouveau_compte')}
           </button>
         </div>
 
         {/* Grille utilisateurs */}
         {loading ? (
-          <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-400 text-sm">
-            Chargement...
+          <div className="elegant-card p-10 text-center text-ink-400 text-sm">
+            {t('chargement')}
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-3">
             {users.map((u) => (
-              <div key={u.id} className="bg-white rounded-lg border border-gray-200 p-4">
+              <div key={u.id} className="elegant-card p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-sm font-medium text-blue-700">
@@ -173,12 +175,12 @@ export default function Utilisateurs() {
                           ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
                           : 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
                       }`}>
-                      {u.actif ? 'Désactiver' : 'Activer'}
+                      {u.actif ? t('desactiver') : t('activer')}
                     </button>
                   </div>
                 </div>
                 <div className="mt-2 text-[10px] text-gray-400">
-                  Depuis le {u.date_debut}
+                  {t('depuis_le')} {u.date_debut}
                 </div>
               </div>
             ))}
@@ -189,10 +191,10 @@ export default function Utilisateurs() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-[480px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
+          <div className="bg-white rounded-2xl w-[480px] max-h-[90vh] overflow-y-auto border border-gray-200 shadow-xl">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
               <span className="text-sm font-medium text-gray-800">
-                {selected ? 'Modifier le compte' : 'Nouveau compte'}
+                {selected ? t('modifier_le_compte') : t('nouveau_compte').replace('+ ', '')}
               </span>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">✕</button>
             </div>
@@ -201,13 +203,13 @@ export default function Utilisateurs() {
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Prénom *</label>
                   <input value={form.prenom} onChange={(e) => setForm({...form, prenom: e.target.value})}
-                    placeholder="Prénom"
+                    placeholder={t('prenom_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[10px] font-medium text-gray-500 uppercase">Nom *</label>
                   <input value={form.nom} onChange={(e) => setForm({...form, nom: e.target.value})}
-                    placeholder="Nom de famille"
+                    placeholder={t('nom_placeholder')}
                     className="h-9 border border-gray-200 rounded-md px-3 text-xs outline-none focus:border-blue-400"/>
                 </div>
                 <div className="flex flex-col gap-1 col-span-2">
@@ -268,9 +270,9 @@ export default function Utilisateurs() {
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" onClick={() => setShowModal(false)}
-                  className="h-8 px-4 border border-gray-200 rounded-md text-xs text-gray-500">Annuler</button>
+                  className="h-8 px-4 border border-ink-200 rounded-md text-xs text-ink-500 hover:bg-ink-50 transition-colors">{t('annuler')}</button>
                 <button type="submit"
-                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3]">
+                  className="h-8 px-4 bg-[#1F3864] text-white rounded-md text-xs font-medium hover:bg-[#2E5FA3] btn-hover shadow-sm">
                   {selected ? 'Mettre à jour' : 'Créer le compte'}
                 </button>
               </div>
